@@ -173,6 +173,8 @@ vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfos() {
 			ofLogError("DeckLinkController") << "Couldn't read frame rate from device mode, may work but set to 0";
 			info.framerate = 0;
 		}
+
+        modeInfos.push_back(info);
 	}
 }
 
