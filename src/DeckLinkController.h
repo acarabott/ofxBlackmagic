@@ -11,6 +11,7 @@
 
 #include "DeckLinkAPI.h"
 #include "TripleBuffer.h"
+#include "DisplayModeInfo.h"
 
 class DeckLinkController : public IDeckLinkInputCallback {
 private:
@@ -36,7 +37,8 @@ public:
 	vector<string> getDeviceNameList();
 	
 	bool selectDevice(int index);
-	
+
+    vector<DisplayModeInfo> getDisplayModeInfos();
 	vector<string> getDisplayModeNames();
 	bool isFormatDetectionEnabled();
 	bool isCapturing();

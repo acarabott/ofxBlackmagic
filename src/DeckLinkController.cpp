@@ -133,20 +133,47 @@ bail:
 
 vector<string> DeckLinkController::getDisplayModeNames()  {
 	vector<string> modeNames;
-	int modeIndex;
-	CFStringRef modeName;
-	
-	for (modeIndex = 0; modeIndex < modeList.size(); modeIndex++) {
+	vector<DisplayModeInfo> modeInfos = getDisplayModeInfos();
+
+	for (int modeIndex = 0; modeIndex < modeInfos.size(); modeIndex++) {
+		modeNames.push_back(modeInfos[modeIndex].name);
+	}
+
+	return modeNames;
+}
+
+vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfos() {
+	vector<DisplayModeInfo> modeInfos;
+
+	typedef vector<IDeckLinkDisplayMode*>::size_type vec_mode_sz;
+
+	for (vec_mode_sz modeIndex = 0; modeList.size(); modeIndex++) {
+		DisplayModeInfo info;
+
+		// name
+		CFStringRef modeName;
 		if (modeList[modeIndex]->GetName(&modeName) == S_OK) {
-			modeNames.push_back(string(CFStringGetCStringPtr(modeName, kCFStringEncodingMacRoman)));
+			info.name = string(CFStringGetCStringPtr(modeName, kCFStringEncodingMacRoman));
 			CFRelease(modeName);
+		} else {
+			info.name = "Unknown mode";
 		}
-		else {
-			modeNames.push_back("Unknown mode");
+
+		// dimensions
+		info.width = modeList[modeIndex]->GetWidth();
+		info.height = modeList[modeIndex]->GetHeight();
+
+		// FPS
+		BMDTimeValue numerator;
+		BMDTimeScale denominator;
+
+		if (modeList[modeIndex]->GetFrameRate(&numerator, &denominator) == S_OK) {
+			info.framerate = numerator / denominator;
+		} else {
+			ofLogError("DeckLinkController") << "Couldn't read frame rate from device mode, may work but set to 0";
+			info.framerate = 0;
 		}
 	}
-	
-	return modeNames;
 }
 
 bool DeckLinkController::isFormatDetectionEnabled()  {
