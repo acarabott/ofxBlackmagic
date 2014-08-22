@@ -143,34 +143,34 @@ const vector<string> DeckLinkController::getDisplayModeNames()  {
 }
 
 const DisplayModeInfo DeckLinkController::getDisplayModeInfo(int modeIndex) {
-    DisplayModeInfo info;
+	DisplayModeInfo info;
 
-    // name
-    CFStringRef modeName;
-    if (modeList[modeIndex]->GetName(&modeName) == S_OK) {
-        info.name = string(CFStringGetCStringPtr(modeName, kCFStringEncodingMacRoman));
-        CFRelease(modeName);
-    } else {
-        info.name = "Unknown mode";
-    }
+	// name
+	CFStringRef modeName;
+	if (modeList[modeIndex]->GetName(&modeName) == S_OK) {
+		info.name = string(CFStringGetCStringPtr(modeName, kCFStringEncodingMacRoman));
+		CFRelease(modeName);
+	} else {
+		info.name = "Unknown mode";
+	}
 
-    // dimensions
-    info.width = modeList[modeIndex]->GetWidth();
-    info.height = modeList[modeIndex]->GetHeight();
+	// dimensions
+	info.width = modeList[modeIndex]->GetWidth();
+	info.height = modeList[modeIndex]->GetHeight();
 
-    // FPS
-    BMDTimeValue numerator;
-    BMDTimeScale denominator;
+	// FPS
+	BMDTimeValue numerator;
+	BMDTimeScale denominator;
 
-    if (modeList[modeIndex]->GetFrameRate(&numerator, &denominator) == S_OK) {
-        info.framerate = numerator / denominator;
-    } else {
-        ofLogError("DeckLinkController") << "Couldn't read frame rate from"
-        << " it may still work but has been set to 0";
-        info.framerate = 0;
-    }
+	if (modeList[modeIndex]->GetFrameRate(&numerator, &denominator) == S_OK) {
+		info.framerate = numerator / denominator;
+	} else {
+		ofLogError("DeckLinkController") << "Couldn't read frame rate from"
+		<< " it may still work but has been set to 0";
+		info.framerate = 0;
+	}
 
-    return info;
+	return info;
 }
 
 const vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfoList() {
@@ -179,7 +179,7 @@ const vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfoList() {
 	typedef vector<IDeckLinkDisplayMode*>::size_type vec_mode_sz;
 
 	for (vec_mode_sz modeIndex = 0; modeList.size(); modeIndex++) {
-        modeInfos.push_back(getDisplayModeInfo(modeIndex));
+		modeInfos.push_back(getDisplayModeInfo(modeIndex));
 	}
 }
 
