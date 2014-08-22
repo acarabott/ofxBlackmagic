@@ -171,7 +171,8 @@ vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfoList() {
 		if (modeList[modeIndex]->GetFrameRate(&numerator, &denominator) == S_OK) {
 			info.framerate = numerator / denominator;
 		} else {
-			ofLogError("DeckLinkController") << "Couldn't read frame rate from device mode, may work but set to 0";
+			ofLogError("DeckLinkController") << "Couldn't read frame rate from"
+                << " it may still work but has been set to 0";
 			info.framerate = 0;
 		}
 
