@@ -24,17 +24,17 @@ void ofxBlackmagicGrabber::setVerbose(bool bTalkToMe) {
 
 const vector<ofVideoFormat> ofxBlackmagicGrabber::listDeviceFormats() {
     vector<ofVideoFormat> formats;
-    vector<DisplayModeInfo> infos = controller.getDisplayModeInfos();
+    vector<DisplayModeInfo> infoList = controller.getDisplayModeInfoList();
 
-    for (int modeIndex = 0; modeIndex < infos.size(); modeIndex++) {
+    for (int modeIndex = 0; modeIndex < infoList.size(); modeIndex++) {
         ofVideoFormat format;
 
         format.pixelFormat = OF_PIXELS_UNKNOWN;
-        format.width = infos[modeIndex].width;
-        format.height = infos[modeIndex].height;
+        format.width = infoList[modeIndex].width;
+        format.height = infoList[modeIndex].height;
 
         vector<float> framerates;
-        framerates.push_back(infos[modeIndex].framerate);
+        framerates.push_back(infoList[modeIndex].framerate);
         format.framerates = framerates;
 
         formats.push_back(format);

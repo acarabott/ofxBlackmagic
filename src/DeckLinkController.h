@@ -38,7 +38,7 @@ public:
 	
 	bool selectDevice(int index);
 
-    vector<DisplayModeInfo> getDisplayModeInfos();
+    vector<DisplayModeInfo> getDisplayModeInfoList();
 	vector<string> getDisplayModeNames();
 	bool isFormatDetectionEnabled();
 	bool isCapturing();

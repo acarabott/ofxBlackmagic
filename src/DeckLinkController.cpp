@@ -133,7 +133,7 @@ bail:
 
 vector<string> DeckLinkController::getDisplayModeNames()  {
 	vector<string> modeNames;
-	vector<DisplayModeInfo> modeInfos = getDisplayModeInfos();
+	vector<DisplayModeInfo> modeInfos = getDisplayModeInfoList();
 
 	for (int modeIndex = 0; modeIndex < modeInfos.size(); modeIndex++) {
 		modeNames.push_back(modeInfos[modeIndex].name);
@@ -142,7 +142,8 @@ vector<string> DeckLinkController::getDisplayModeNames()  {
 	return modeNames;
 }
 
-vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfos() {
+
+vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfoList() {
 	vector<DisplayModeInfo> modeInfos;
 
 	typedef vector<IDeckLinkDisplayMode*>::size_type vec_mode_sz;
