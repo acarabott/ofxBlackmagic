@@ -16,6 +16,44 @@ ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
     close();
 }
 
+const vector<ofVideoFormat> ofxBlackmagicGrabber::listDeviceFormats() {
+    vector<ofVideoFormat> formats;
+    vector<DisplayModeInfo> infos = controller.getDisplayModeInfos();
+
+    for (int modeIndex = 0; modeIndex < infos.size(); modeIndex++) {
+        ofVideoFormat format;
+
+        format.pixelFormat = OF_PIXELS_UNKNOWN;
+        format.width = infos[modeIndex].width;
+        format.height = infos[modeIndex].height;
+
+        vector<float> framerates;
+        framerates.push_back(infos[modeIndex].framerate);
+        format.framerates = framerates;
+
+        formats.push_back(format);
+    }
+}
+
+vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
+    vector<ofVideoDevice> devices;
+    vector<string> deviceNames = controller.getDeviceNameList();
+
+    for (int i = 0; i < controller.getDeviceCount(); ++i) {
+        ofVideoDevice device;
+        device.id           = i;
+        device.deviceName   = deviceNames[i];
+        device.hardwareName = deviceNames[i];
+        device.bAvailable   = controller.selectDevice(i);
+        device.formats      = listDeviceFormats();
+
+        devices.push_back(device);
+
+    }
+
+    return devices;
+}
+
 bool ofxBlackmagicGrabber::setup(int width, int height, float framerate) {
     if(!controller.init()) {
         return false;

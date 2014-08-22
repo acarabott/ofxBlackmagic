@@ -1,6 +1,8 @@
 #pragma once
 
 #include "DeckLinkController.h"
+#include "DisplayModeInfo.h"
+#include "ofTypes.h"
 
 class ofxBlackmagicGrabber : ofBaseVideoGrabber {
 private:
@@ -21,7 +23,8 @@ public:
     ofxBlackmagicGrabber();
     virtual ~ofxBlackmagicGrabber();
 
-    vector<ofVideoDevice>   listDevices();
+    const vector<ofVideoFormat>     listDeviceFormats();
+    vector<ofVideoDevice>           listDevices();
 
     bool setup(int width, int height, float framerate);
 
