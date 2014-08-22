@@ -13,6 +13,8 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     bIsFrameNew         = false;
     bVerbose            = false;
     deviceID            = 0;
+    width               = 0.f;
+    height              = 0.f;
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
@@ -63,27 +65,37 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
     return devices;
 }
 
-bool ofxBlackmagicGrabber::setup(int width, int height, float framerate) {
-    if(!controller.init()) {
+bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
+    if (!controller.init()
+        || displayMode == bmdModeUnknown
+        || !controller.startCaptureWithMode(displayMode))
+    {
         return false;
     }
-    controller.selectDevice(0);
-    vector<string> displayModes = controller.getDisplayModeNames();
-    ofLogVerbose("ofxBlackmagicGrabber") << "Available display modes: " << ofToString(displayModes);
-    BMDDisplayMode displayMode = bmdModeUnknown;
-    if(width == 3840 && height == 2160 && framerate == 30) {
-        displayMode = bmdMode4K2160p2997;
-    } else if(width == 1920 && height == 1080 && framerate == 30) {
-        displayMode = bmdModeHD1080p30;
-    }else{
-        ofLogError("ofxBlackmagicGrabber") << "ofxBlackmagicGrabber needs to be updated to support that mode.";
-        return false;
-    }
-    if(!controller.startCaptureWithMode(displayMode)) {
-        return false;
-    }
-    this->width = width, this->height = height;
+
+    this->width = controller.getDisplayModeInfo(deviceID).width;
+    this->height = controller.getDisplayModeInfo(deviceID).height;
+
     return true;
+}
+
+bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
+    ofLogNotice("ofxBlackmagicGrabber") << "Using display mode with matching"
+        << "width and height." << endl
+        << "To use a specific framerate or video mode one of:" << endl
+        << " - setDisplayMode(BMDDisplayMode displayMode)" << endl
+        << " - initGrabber(int width, int height, float framerate)";
+
+    controller.selectDevice(deviceID);
+    vector<string> displayModes = controller.getDisplayModeNames();
+    ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
+        << ofToString(displayModes);
+
+    return setDisplayMode(controller.getDisplayMode(w, h));
+}
+
+bool ofxBlackmagicGrabber::initGrabber(int w, int h, int framerate) {
+    return setDisplayMode(controller.getDisplayMode(w, h, framerate));
 }
 
 void ofxBlackmagicGrabber::clearMemory() {

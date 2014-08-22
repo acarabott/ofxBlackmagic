@@ -14,8 +14,6 @@ private:
     bool yuvTexOld, grayTexOld, colorTexOld;
     ofTexture yuvTex, grayTex, colorTex;
 
-    int width, height;
-
 public:
                                     ofxBlackmagicGrabber();
     virtual                         ~ofxBlackmagicGrabber();
@@ -24,8 +22,12 @@ public:
 
     const vector<ofVideoFormat>     listDeviceFormats();
     vector<ofVideoDevice>           listDevices();
+    bool                            setDisplayMode(BMDDisplayMode);
+    bool                            initGrabber(int w, int h);
+    bool                            initGrabber(int w, int h, int framerate);
+                                        // e.g. 2997 for 29.97fps
+                                        // 30 or 3000 for 30fps
 
-    bool setup(int width, int height, float framerate);
     void                            setDeviceID(int _deviceID);
 
     void update();
@@ -53,4 +55,6 @@ protected:
 
     bool                            bVerbose;
     int                             deviceID;
+    float                           width;
+    float                           height;
 };
