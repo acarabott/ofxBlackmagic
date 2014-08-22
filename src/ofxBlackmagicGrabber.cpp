@@ -21,10 +21,6 @@ ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
     close();
 }
 
-void ofxBlackmagicGrabber::setVerbose(bool bTalkToMe) {
-    bVerbose = bTalkToMe;
-}
-
 const vector<ofVideoFormat> ofxBlackmagicGrabber::listDeviceFormats() {
     vector<ofVideoFormat> formats;
     vector<DisplayModeInfo> infoList = controller.getDisplayModeInfoList();
@@ -136,6 +132,10 @@ float ofxBlackmagicGrabber::getWidth() {
 
 float ofxBlackmagicGrabber::getHeight() {
     return height;
+}
+
+void ofxBlackmagicGrabber::setVerbose(bool bTalkToMe) {
+    bVerbose = bTalkToMe;
 }
 
 void ofxBlackmagicGrabber::setDeviceID(int _deviceID) {

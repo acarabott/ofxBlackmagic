@@ -18,8 +18,6 @@ public:
                                     ofxBlackmagicGrabber();
     virtual                         ~ofxBlackmagicGrabber();
 
-    void                            setVerbose(bool bTalkToMe);
-
     const vector<ofVideoFormat>     listDeviceFormats();
     vector<ofVideoDevice>           listDevices();
     bool                            setDisplayMode(BMDDisplayMode);
@@ -28,6 +26,7 @@ public:
                                         // e.g. 2997 for 29.97fps
                                         // 30 or 3000 for 30fps
 
+    void                            setVerbose(bool bTalkToMe);
     void                            setDeviceID(int _deviceID);
 
     void update();
