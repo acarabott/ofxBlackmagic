@@ -64,8 +64,12 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
 bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
     if (!controller.init()
         || displayMode == bmdModeUnknown
-        || !controller.startCaptureWithMode(displayMode))
+        || !controller.selectDevice(deviceID));
     {
+        return false;
+    }
+
+    if (!controller.startCaptureWithMode(displayMode)) {
         return false;
     }
 
