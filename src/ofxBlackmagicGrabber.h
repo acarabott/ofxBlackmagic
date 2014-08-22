@@ -8,16 +8,13 @@ class ofxBlackmagicGrabber : ofBaseVideoGrabber {
 private:
     DeckLinkController controller;
 
+    bool bIsFrameNew;
     bool grayPixOld, colorPixOld;
     ofPixels yuvPix, grayPix, colorPix;
     bool yuvTexOld, grayTexOld, colorTexOld;
     ofTexture yuvTex, grayTex, colorTex;
 
     int width, height;
-
-protected:
-
-    bool                    bIsFrameNew;
 
 public:
     ofxBlackmagicGrabber();
