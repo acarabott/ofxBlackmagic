@@ -26,6 +26,7 @@ public:
     vector<ofVideoDevice>           listDevices();
 
     bool setup(int width, int height, float framerate);
+    void                            setDeviceID(int _deviceID);
 
     void update();
     bool isFrameNew();
@@ -51,4 +52,5 @@ public:
 protected:
 
     bool                            bVerbose;
+    int                             deviceID;
 };

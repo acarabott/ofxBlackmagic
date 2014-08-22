@@ -12,6 +12,7 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     // common
     bIsFrameNew         = false;
     bVerbose            = false;
+    deviceID            = 0;
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
@@ -121,6 +122,10 @@ float ofxBlackmagicGrabber::getWidth() {
 
 float ofxBlackmagicGrabber::getHeight() {
     return height;
+}
+
+void ofxBlackmagicGrabber::setDeviceID(int _deviceID) {
+    deviceID = _deviceID;
 }
 
 vector<unsigned char>& ofxBlackmagicGrabber::getYuvRaw() {
