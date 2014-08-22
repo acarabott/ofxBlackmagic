@@ -28,6 +28,7 @@ public:
 
     void                            setVerbose(bool bTalkToMe);
     void                            setDeviceID(int _deviceID);
+    void                            setDesiredFrameRate(int _framerate);
 
     void update();
     bool isFrameNew();
@@ -56,4 +57,5 @@ protected:
     int                             deviceID;
     float                           width;
     float                           height;
+    int                             framerate;
 };

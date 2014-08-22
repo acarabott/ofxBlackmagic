@@ -15,6 +15,7 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     deviceID            = 0;
     width               = 0.f;
     height              = 0.f;
+    framerate           = -1;
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
@@ -91,10 +92,15 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
         << ofToString(displayModes);
 
-    return setDisplayMode(controller.getDisplayMode(w, h));
+    if (framerate == -1) {
+        return controller.getDisplayMode(w, h)
+    }
+
+    return setDisplayMode(controller.getDisplayMode(w, h, framerate));
 }
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h, int framerate) {
+    setDesiredFrameRate(framerate);
     return setDisplayMode(controller.getDisplayMode(w, h, framerate));
 }
 
@@ -144,6 +150,10 @@ void ofxBlackmagicGrabber::setVerbose(bool bTalkToMe) {
 
 void ofxBlackmagicGrabber::setDeviceID(int _deviceID) {
     deviceID = _deviceID;
+}
+
+void ofxBlackmagicGrabber::setDesiredFrameRate(int _framerate) {
+    framerate = _framerate;
 }
 
 vector<unsigned char>& ofxBlackmagicGrabber::getYuvRaw() {
