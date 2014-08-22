@@ -38,8 +38,10 @@ public:
 	
 	bool selectDevice(int index);
 
-    vector<DisplayModeInfo> getDisplayModeInfoList();
-	vector<string> getDisplayModeNames();
+    const DisplayModeInfo getDisplayModeInfo(int index);
+    const vector<DisplayModeInfo> getDisplayModeInfoList();
+    const vector<string> getDisplayModeNames();
+
 	bool isFormatDetectionEnabled();
 	bool isCapturing();
 	
