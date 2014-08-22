@@ -57,6 +57,8 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
         devices.push_back(device);
 
     }
+    // ensure that we return to our original deviceID
+    controller.selectDevice(deviceID);
 
     return devices;
 }
