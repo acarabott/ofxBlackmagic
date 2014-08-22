@@ -9,11 +9,17 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
 ,grayTexOld(true)
 ,colorTexOld(true) {
 
-    bIsFrameNew = false;
+    // common
+    bIsFrameNew         = false;
+    bVerbose            = false;
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
     close();
+}
+
+void ofxBlackmagicGrabber::setVerbose(bool bTalkToMe) {
+    bVerbose = bTalkToMe;
 }
 
 const vector<ofVideoFormat> ofxBlackmagicGrabber::listDeviceFormats() {

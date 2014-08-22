@@ -17,8 +17,10 @@ private:
     int width, height;
 
 public:
-    ofxBlackmagicGrabber();
-    virtual ~ofxBlackmagicGrabber();
+                                    ofxBlackmagicGrabber();
+    virtual                         ~ofxBlackmagicGrabber();
+
+    void                            setVerbose(bool bTalkToMe);
 
     const vector<ofVideoFormat>     listDeviceFormats();
     vector<ofVideoDevice>           listDevices();
@@ -45,4 +47,8 @@ public:
     void drawYuv(); // fastest
     void drawGray(); // fast
     void drawColor(); // slower
+
+protected:
+
+    bool                            bVerbose;
 };
