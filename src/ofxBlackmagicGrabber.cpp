@@ -133,8 +133,8 @@ void ofxBlackmagicGrabber::update() {
     }
 }
 
-bool isFrameNew() {
-    return isFrameNew;
+bool ofxBlackmagicGrabber::isFrameNew() {
+    return bIsFrameNew;
 }
 
 float ofxBlackmagicGrabber::getWidth() {
