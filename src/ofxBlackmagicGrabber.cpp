@@ -16,6 +16,7 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     width               = 0.f;
     height              = 0.f;
     framerate           = -1;
+    bUseTexture         = true;
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
@@ -227,4 +228,8 @@ void ofxBlackmagicGrabber::draw(float x, float y) {
 
 void ofxBlackmagicGrabber::draw(float x, float y, float w, float h) {
     getCurrentTexture().draw(x, y, w, h);
+}
+
+void ofxBlackmagicGrabber::setUseTexture(bool _bUseTexture) {
+    bUseTexture = _bUseTexture;
 }

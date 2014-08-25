@@ -55,9 +55,12 @@ public:
     void draw(float x, float y);
     void draw(float x, float y, float w, float h);
 
+    void setUseTexture(bool _bUseTexture); // for compatibility, unused.
+
 protected:
 
     bool                            bVerbose;
+    bool                            bUseTexture;
     int                             deviceID;
     float                           width;
     float                           height;
