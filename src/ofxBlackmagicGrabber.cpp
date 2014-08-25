@@ -233,3 +233,7 @@ void ofxBlackmagicGrabber::draw(float x, float y, float w, float h) {
 void ofxBlackmagicGrabber::setUseTexture(bool _bUseTexture) {
     bUseTexture = _bUseTexture;
 }
+
+ofTexture& ofxBlackmagicGrabber::getTextureReference() {
+    return getCurrentTexture();
+}

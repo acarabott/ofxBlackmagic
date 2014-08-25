@@ -56,6 +56,7 @@ public:
     void draw(float x, float y, float w, float h);
 
     void setUseTexture(bool _bUseTexture); // for compatibility, unused.
+    ofTexture& getTextureReference();
 
 protected:
 
