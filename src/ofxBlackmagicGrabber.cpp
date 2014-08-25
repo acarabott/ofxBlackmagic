@@ -204,6 +204,11 @@ ofTexture& ofxBlackmagicGrabber::getColorTexture() {
     return colorTex;
 }
 
+ofTexture& ofxBlackmagicGrabber::getCurrentTexture() {
+    // TODO update this to get current texture
+    return getColorTexture();
+}
+
 void ofxBlackmagicGrabber::drawYuv(){
     getYuvTexture().draw(0, 0);
 }
@@ -214,4 +219,12 @@ void ofxBlackmagicGrabber::drawGray() {
 
 void ofxBlackmagicGrabber::drawColor() {
     getColorTexture().draw(0, 0);
+}
+
+void ofxBlackmagicGrabber::draw(float x, float y) {
+    getCurrentTexture().draw(x, y);
+}
+
+void ofxBlackmagicGrabber::draw(float x, float y, float w, float h) {
+    getCurrentTexture().draw(x, y, w, h);
 }

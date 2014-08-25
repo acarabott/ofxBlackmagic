@@ -46,10 +46,14 @@ public:
     ofTexture& getYuvTexture(); // fastest
     ofTexture& getGrayTexture(); // fast
     ofTexture& getColorTexture(); // slower
+    ofTexture& getCurrentTexture();
 
     void drawYuv(); // fastest
     void drawGray(); // fast
     void drawColor(); // slower
+
+    void draw(float x, float y);
+    void draw(float x, float y, float w, float h);
 
 protected:
 
