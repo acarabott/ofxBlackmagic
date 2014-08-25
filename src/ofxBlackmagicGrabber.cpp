@@ -181,6 +181,15 @@ ofPixels& ofxBlackmagicGrabber::getColorPixels() {
     return colorPix;
 }
 
+ofPixels& ofxBlackmagicGrabber::getCurrentPixels() {
+    // TODO have this return actual current pixels
+    return getColorPixels();
+}
+
+unsigned char* ofxBlackmagicGrabber::getPixels() {
+    return getCurrentPixels().getPixels();
+}
+
 ofTexture& ofxBlackmagicGrabber::getYuvTexture() {
     if(yuvTexOld) {
         yuvTex.loadData(&(getYuvRaw()[0]), width / 2, height, GL_RGBA);

@@ -42,6 +42,8 @@ public:
     vector<unsigned char>& getYuvRaw(); // fastest
     ofPixels& getGrayPixels(); // fast
     ofPixels& getColorPixels(); // slow
+    ofPixels& getCurrentPixels();
+    unsigned char* getPixels();
 
     ofTexture& getYuvTexture(); // fastest
     ofTexture& getGrayTexture(); // fast
