@@ -4,7 +4,7 @@
 #include "DisplayModeInfo.h"
 #include "ofTypes.h"
 
-class ofxBlackmagicGrabber : ofBaseVideoGrabber {
+class ofxBlackmagicGrabber : public ofBaseVideoGrabber, public ofBaseVideoDraws{
 private:
     DeckLinkController controller;
 
