@@ -210,6 +210,10 @@ ofTexture& ofxBlackmagicGrabber::getCurrentTexture() {
     return getColorTexture();
 }
 
+ofTexture* ofxBlackmagicGrabber::getTexture() {
+    return &getCurrentTexture();
+}
+
 void ofxBlackmagicGrabber::drawYuv(){
     getYuvTexture().draw(0, 0);
 }

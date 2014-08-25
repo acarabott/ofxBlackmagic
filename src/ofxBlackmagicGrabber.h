@@ -47,6 +47,7 @@ public:
     ofTexture& getGrayTexture(); // fast
     ofTexture& getColorTexture(); // slower
     ofTexture& getCurrentTexture();
+    ofTexture* getTexture();
 
     // void videoSettings(); // not implemented
 
