@@ -58,6 +58,10 @@ public:
     void draw(float x, float y);
     void draw(float x, float y, float w, float h);
 
+    void setAnchorPercent(float xPct, float yPct);
+    void setAnchorPoint(float x, float y);
+    void resetAnchor();
+
     void setUseTexture(bool _bUseTexture); // for compatibility, unused.
     ofTexture& getTextureReference();
 

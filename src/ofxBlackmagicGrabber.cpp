@@ -234,6 +234,24 @@ void ofxBlackmagicGrabber::draw(float x, float y, float w, float h) {
     getCurrentTexture().draw(x, y, w, h);
 }
 
+void ofxBlackmagicGrabber::setAnchorPercent(float xPct, float yPct) {
+    getYuvTexture().setAnchorPercent(xPct, yPct);
+    getGrayTexture().setAnchorPercent(xPct, yPct);
+    getColorTexture().setAnchorPercent(xPct, yPct);
+}
+
+void ofxBlackmagicGrabber::setAnchorPoint(float x, float y) {
+    getYuvTexture().setAnchorPoint(x, y);
+    getGrayTexture().setAnchorPoint(x, y);
+    getColorTexture().setAnchorPoint(x, y);
+}
+
+void ofxBlackmagicGrabber::resetAnchor() {
+    getYuvTexture().resetAnchor();
+    getGrayTexture().resetAnchor();
+    getColorTexture().resetAnchor();
+}
+
 void ofxBlackmagicGrabber::setUseTexture(bool _bUseTexture) {
     bUseTexture = _bUseTexture;
 }
