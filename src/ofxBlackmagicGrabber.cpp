@@ -93,7 +93,7 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
         << ofToString(displayModes);
 
     if (framerate == -1) {
-        return controller.getDisplayMode(w, h)
+        return controller.getDisplayMode(w, h);
     }
 
     return setDisplayMode(controller.getDisplayMode(w, h, framerate));
