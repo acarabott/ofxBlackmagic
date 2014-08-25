@@ -48,6 +48,8 @@ public:
     ofTexture& getColorTexture(); // slower
     ofTexture& getCurrentTexture();
 
+    // void videoSettings(); // not implemented
+
     void drawYuv(); // fastest
     void drawGray(); // fast
     void drawColor(); // slower
