@@ -23,7 +23,10 @@ private:
 	bool supportFormatDetection;
 	bool currentlyCapturing;
 	
-	void getAncillaryDataFromFrame(IDeckLinkVideoInputFrame* frame, BMDTimecodeFormat format, string& timecodeString, string& userBitsString);
+	void getAncillaryDataFromFrame(IDeckLinkVideoInputFrame* frame,
+                                   BMDTimecodeFormat format,
+                                   string& timecodeString,
+                                   string& userBitsString);
 	
 public:
 	TripleBuffer< vector<unsigned char> > buffer;
@@ -47,8 +50,8 @@ public:
 
 	unsigned long getDisplayModeBufferSize(BMDDisplayMode mode);
 
-	bool startCaptureWithMode(BMDDisplayMode videoMode);
-	bool startCaptureWithIndex(int videoModeIndex);
+	bool startCaptureWithMode(BMDDisplayMode displayMode,
+                              BMDPixelFormat pixelFormat);
 	void stopCapture();
 
 	virtual HRESULT QueryInterface (REFIID iid, LPVOID *ppv) {return E_NOINTERFACE;}

@@ -19,9 +19,12 @@ public:
 
     const vector<ofVideoFormat>     listDeviceFormats();
     vector<ofVideoDevice>           listDevices();
-    bool                            setDisplayMode(BMDDisplayMode);
+    bool                            setDisplayMode(BMDDisplayMode,
+                                        BMDPixelFormat);
     bool                            initGrabber(int w, int h);
-    bool                            initGrabber(int w, int h, int framerate);
+    bool                            initGrabber(int w, int h, int framerate,
+                                                ofxBlackmagicTexFormat texFormat
+                                                    = OF_BLACKMAGIC_BGRA);
                                         // e.g. 2997 for 29.97fps
                                         // 30 or 3000 for 30fps
 
@@ -41,7 +44,7 @@ public:
     bool                            setPixelFormat(ofPixelFormat pixelFormat);
     ofPixelFormat                   getPixelFormat();
 
-    vector<unsigned char>& getYuvRaw(); // fastest
+    vector<unsigned char>&          getRaw(); // fastest
     ofPixels& getGrayPixels(); // fast
     ofPixels& getRgbPixels(); // slow
     ofPixels& getRgbaPixels();
@@ -52,6 +55,8 @@ public:
 
     void                            setTextureFormat(ofxBlackmagicTexFormat tf);
     ofxBlackmagicTexFormat          getTextureFormat();
+
+    BMDPixelFormat                  getBmPixelFormat(ofxBlackmagicTexFormat tf);
 
     ofTexture& getYuvTexture(); // fastest
     ofTexture& getGrayTexture(); // fast
@@ -85,7 +90,7 @@ protected:
 private:
     DeckLinkController              controller;
 
-    ofPixelFormat                   currentPixelFormat;
+    ofPixelFormat                   currentOfPixelFormat;
     ofPixels&                       currentPixels;
 
     ofPixels                        yuvPix,

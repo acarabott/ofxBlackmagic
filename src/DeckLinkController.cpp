@@ -239,18 +239,8 @@ unsigned long DeckLinkController::getDisplayModeBufferSize(BMDDisplayMode mode) 
 	return 0;
 }
 
-bool DeckLinkController::startCaptureWithIndex(int videoModeIndex)  {
-	// Get the IDeckLinkDisplayMode from the given index
-	if ((videoModeIndex < 0) || (videoModeIndex >= modeList.size())) {
-		ofLogError("DeckLinkController") << "An invalid display mode was selected.";
-		return false;
-	}
-	
-	return startCaptureWithMode(modeList[videoModeIndex]->GetDisplayMode());
-}
-
-bool DeckLinkController::startCaptureWithMode(BMDDisplayMode videoMode) {
-	unsigned long bufferSize = getDisplayModeBufferSize(videoMode);
+bool DeckLinkController::startCaptureWithMode(BMDDisplayMode displayMode, BMDPixelFormat pixelFormat) {
+	unsigned long bufferSize = getDisplayModeBufferSize(displayMode);
 	if (bufferSize == 0) {
 		ofLogError("DeckLinkController") << "Invalid display mode";
 	    return false;
@@ -267,7 +257,7 @@ bool DeckLinkController::startCaptureWithMode(BMDDisplayMode videoMode) {
 	deckLinkInput->SetCallback(this);
 	
 	// Set the video input mode
-	if (deckLinkInput->EnableVideoInput(videoMode, bmdFormat8BitYUV, videoInputFlags) != S_OK) {
+	if (deckLinkInput->EnableVideoInput(displayMode, pixelFormat, videoInputFlags) != S_OK) {
 		ofLogError("DeckLinkController") << "This application was unable to select the chosen video mode. Perhaps, the selected device is currently in-use.";
 		return false;
 	}

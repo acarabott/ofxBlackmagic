@@ -25,8 +25,9 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     height              = 0.f;
     framerate           = -1;
     bUseTexture         = true;
-    currentPixelFormat  = OF_PIXELS_BGRA;
-    currentTexFormat    = OF_BLACKMAGIC_BGRA;
+
+    currentOfPixelFormat    = OF_PIXELS_BGRA;
+    currentTexFormat        = OF_BLACKMAGIC_BGRA;
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
@@ -73,7 +74,9 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
     return devices;
 }
 
-bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
+bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode,
+    BMDPixelFormat pixelFormat)
+{
     if (!controller.init()
         || displayMode == bmdModeUnknown
         || !controller.selectDevice(deviceID));
@@ -81,7 +84,7 @@ bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
         return false;
     }
 
-    if (!controller.startCaptureWithMode(displayMode)) {
+    if (!controller.startCaptureWithMode(displayMode, pixelFormat)) {
         return false;
     }
 
@@ -91,11 +94,35 @@ bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
     return true;
 }
 
+BMDPixelFormat
+ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat texFormat) {
+    switch (texFormat) {
+        case OF_BLACKMAGIC_YUV:
+            return bmdFormat8BitYUV;
+            break;
+        case OF_BLACKMAGIC_GRAY:
+            return bmdFormat8BitYUV;
+            break;
+        case OF_BLACKMAGIC_RGB:
+            // TODO: depends on quickest conversion: yuv or rgba to rgb
+            return bmdFormat8BitYUV;
+            break;
+        case OF_BLACKMAGIC_RGBA:
+            return bmdFormat8BitBGRA;
+            break;
+        case OF_BLACKMAGIC_BGRA:
+            return bmdFormat8BitBGRA;
+            break;
+        default:
+            break;
+    }
+}
+
 bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     ofLogNotice("ofxBlackmagicGrabber") << "Using display mode with matching"
-        << "width and height." << endl
-        << "To use a specific framerate or video mode one of:" << endl
-        << " - setDisplayMode(BMDDisplayMode displayMode)" << endl
+        << "width and height, BGRA pixel format." << endl
+        << "To use a specific video mode or pixel format use either:" << endl
+        << " - setDisplayMode(BMDDisplayMode, BMDPixelFormat)" << endl
         << " - initGrabber(int width, int height, float framerate)";
 
     controller.selectDevice(deviceID);
@@ -106,13 +133,21 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     if (framerate == -1) {
         return controller.getDisplayMode(w, h);
     }
-
-    return setDisplayMode(controller.getDisplayMode(w, h, framerate));
+    
+    BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
+    BMDPixelFormat pixelFormat = getBmPixelFormat(currentTexFormat);
+    return setDisplayMode(displayMode, pixelFormat);
 }
 
-bool ofxBlackmagicGrabber::initGrabber(int w, int h, int framerate) {
+bool ofxBlackmagicGrabber::initGrabber(int w, int h, int framerate,
+    ofxBlackmagicTexFormat texFormat)
+{
+    setTextureFormat(texFormat);
     setDesiredFrameRate(framerate);
-    return setDisplayMode(controller.getDisplayMode(w, h, framerate));
+    BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
+    BMDPixelFormat pixelMode = getBmPixelFormat(texFormat);
+
+    return setDisplayMode(displayMode, pixelMode);
 }
 
 void ofxBlackmagicGrabber::clearMemory() {
@@ -168,49 +203,60 @@ void ofxBlackmagicGrabber::setDeviceID(int _deviceID) {
 }
 
 void ofxBlackmagicGrabber::setDesiredFrameRate(int _framerate) {
+    ofLogVerbose("ofxBlackmagicGrabber") << "setDesiredFrameRate(): "
+        "to change framerate initGrabber needs to be called now";
+
     framerate = _framerate;
 }
 
 bool ofxBlackmagicGrabber::setPixelFormat(ofPixelFormat pixelFormat) {
+    if (pixelFormat != OF_PIXELS_MONO
+        && pixelFormat != OF_PIXELS_RGB
+        && pixelFormat != OF_PIXELS_RGBA
+        && pixelFormat != OF_PIXELS_BGRA)
+    {
+        ofLogWarning("ofxBlackmagicGrabber") << "setPixelFormat(): "
+            "requested pixel format " << pixelFormat << " not supported";
+        return false;
+    }
+
     switch (pixelFormat) {
         case OF_PIXELS_MONO:
             currentPixels = getGrayPixels();
-            return true;
             break;
         case OF_PIXELS_RGB:
             currentPixels = getRgbPixels();
-            return true;
             break;
         case OF_PIXELS_RGBA:
             currentPixels = getRgbaPixels();
-            return true;
             break;
         case OF_PIXELS_BGRA:
             currentPixels = getBgraPixels();
-            return true;
             break;
         default:
+            return false;
             break;
     }
 
-    ofLogWarning("ofxBlackmagicGrabber") << "setPixelFormat(): "
-        "requested pixel format " << pixelFormat << " not supported";
-    return false;
+
+    currentOfPixelFormat = pixelFormat;
+    return true;
 }
 
 ofPixelFormat ofxBlackmagicGrabber::getPixelFormat() {
-    return currentPixelFormat;
+    return currentOfPixelFormat;
 }
 
-vector<unsigned char>& ofxBlackmagicGrabber::getYuvRaw() {
+vector<unsigned char>& ofxBlackmagicGrabber::getRaw() {
     return controller.buffer.getFront();
 }
 
 ofPixels& ofxBlackmagicGrabber::getGrayPixels() {
     if(grayPixOld) {
+        // TODO if/else on current pixel mode
         grayPix.allocate(width, height, OF_IMAGE_GRAYSCALE);
         unsigned int n = width * height;
-        cby0cry1_to_y(&(getYuvRaw()[0]), grayPix.getPixels(), n);
+        cby0cry1_to_y(&(getRaw()[0]), grayPix.getPixels(), n);
         grayPixOld = false;
     }
     return grayPix;
@@ -218,9 +264,10 @@ ofPixels& ofxBlackmagicGrabber::getGrayPixels() {
 
 ofPixels& ofxBlackmagicGrabber::getRgbPixels() {
     if(rgbPixOld) {
+        // TODO if/else on currentPixelMode
         rgbPix.allocate(width, height, OF_IMAGE_COLOR);
         unsigned int n = width * height;
-        cby0cry1_to_rgb(&(getYuvRaw()[0]), rgbPix.getPixels(), n);
+        cby0cry1_to_rgb(&(getRaw()[0]), rgbPix.getPixels(), n);
         rgbPixOld = false;
     }
     return rgbPix;
@@ -228,9 +275,10 @@ ofPixels& ofxBlackmagicGrabber::getRgbPixels() {
 
 ofPixels& ofxBlackmagicGrabber::getRgbaPixels() {
     if(rgbaPixOld) {
+        // TODO get from currentPixelMode
         rgbaPix.allocate(width, height, OF_IMAGE_COLOR);
         unsigned int n = width * height;
-        cby0cry1_to_rgb(&(getYuvRaw()[0]), rgbaPix.getPixels(), n);
+        cby0cry1_to_rgb(&(getRaw()[0]), rgbaPix.getPixels(), n);
         rgbaPixOld = false;
     }
     return rgbaPix;
@@ -238,9 +286,10 @@ ofPixels& ofxBlackmagicGrabber::getRgbaPixels() {
 
 ofPixels& ofxBlackmagicGrabber::getBgraPixels() {
     if(bgraPixOld) {
+        // TODO get from currentPixelMode
         bgraPix.allocate(width, height, OF_IMAGE_COLOR);
         unsigned int n = width * height;
-        cby0cry1_to_rgb(&(getYuvRaw()[0]), bgraPix.getPixels(), n);
+        cby0cry1_to_rgb(&(getRaw()[0]), bgraPix.getPixels(), n);
         bgraPixOld = false;
     }
     return bgraPix;
@@ -288,7 +337,7 @@ ofxBlackmagicTexFormat ofxBlackmagicGrabber::getTextureFormat() {
 
 ofTexture& ofxBlackmagicGrabber::getYuvTexture() {
     if(yuvTexOld) {
-        yuvTex.loadData(&(getYuvRaw()[0]), width / 2, height, GL_RGBA);
+        yuvTex.loadData(&(getRaw()[0]), width / 2, height, GL_RGBA);
         yuvTexOld = false;
     }
     return yuvTex;
