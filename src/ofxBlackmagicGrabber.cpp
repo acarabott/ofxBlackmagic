@@ -75,8 +75,7 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
 }
 
 bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode,
-    BMDPixelFormat pixelFormat)
-{
+                                          BMDPixelFormat pixelFormat) {
     if (!controller.init()
         || displayMode == bmdModeUnknown
         || !controller.selectDevice(deviceID));
@@ -94,8 +93,8 @@ bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode,
     return true;
 }
 
-BMDPixelFormat
-ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat texFormat) {
+BMDPixelFormat ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat
+                                                      texFormat) {
     switch (texFormat) {
         case OF_BLACKMAGIC_YUV:
             return bmdFormat8BitYUV;
