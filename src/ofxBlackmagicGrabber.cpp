@@ -136,10 +136,13 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
             "convenient) RGB or RGBA, then call setTextureFormat beforehand";
     }
 
-    controller.selectDevice(deviceID);
     vector<string> displayModes = controller.getDisplayModeNames();
     ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
         << ofToString(displayModes);
+
+    if (!controller.selectDevice(deviceID)) {
+        return false;
+    }
 
     if (framerate == UNSET_FRAMERATE) {
         ofLogNotice("ofxBlackmagicGrabber") << "Framerate not set, using the "
