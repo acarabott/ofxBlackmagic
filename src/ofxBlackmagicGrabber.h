@@ -4,16 +4,15 @@
 #include "DisplayModeInfo.h"
 #include "ofTypes.h"
 
+enum ofxBlackmagicTexFormat {
+    OF_BLACKMAGIC_YUV = 0,
+    OF_BLACKMAGIC_GRAY,
+    OF_BLACKMAGIC_RGB,
+    OF_BLACKMAGIC_RGBA,
+    OF_BLACKMAGIC_BGRA
+};
+
 class ofxBlackmagicGrabber : public ofBaseVideoGrabber, public ofBaseVideoDraws{
-private:
-    DeckLinkController controller;
-
-    bool bIsFrameNew;
-    bool grayPixOld, colorPixOld;
-    ofPixels yuvPix, grayPix, colorPix;
-    bool yuvTexOld, grayTexOld, colorTexOld;
-    ofTexture yuvTex, grayTex, colorTex;
-
 public:
                                     ofxBlackmagicGrabber();
     virtual                         ~ofxBlackmagicGrabber();
@@ -39,23 +38,30 @@ public:
     float getWidth();
     float getHeight();
 
+    bool                            setPixelFormat(ofPixelFormat pixelFormat);
+    ofPixelFormat                   getPixelFormat();
+
     vector<unsigned char>& getYuvRaw(); // fastest
     ofPixels& getGrayPixels(); // fast
-    ofPixels& getColorPixels(); // slow
+    ofPixels& getRgbPixels(); // slow
+    ofPixels& getRgbaPixels();
+    ofPixels& getBgraPixels();
     ofPixels& getCurrentPixels();
+    ofPixels&                       getPixelsRef();
     unsigned char* getPixels();
+
+    void                            setTextureFormat(ofxBlackmagicTexFormat tf);
+    ofxBlackmagicTexFormat          getTextureFormat();
 
     ofTexture& getYuvTexture(); // fastest
     ofTexture& getGrayTexture(); // fast
-    ofTexture& getColorTexture(); // slower
+    ofTexture& getRgbTexture(); // slower
+    ofTexture& getRgbaTexture();
+    ofTexture& getBgraTexture();
     ofTexture& getCurrentTexture();
     ofTexture* getTexture();
 
     // void videoSettings(); // not implemented
-
-    void drawYuv(); // fastest
-    void drawGray(); // fast
-    void drawColor(); // slower
 
     void draw(float x, float y);
     void draw(float x, float y, float w, float h);
@@ -68,11 +74,44 @@ public:
     ofTexture& getTextureReference();
 
 protected:
-
+    bool                            bIsFrameNew;
     bool                            bVerbose;
     bool                            bUseTexture;
     int                             deviceID;
     float                           width;
     float                           height;
     int                             framerate;
+
+private:
+    DeckLinkController              controller;
+
+    ofPixelFormat                   currentPixelFormat;
+    ofPixels&                       currentPixels;
+
+    ofPixels                        yuvPix,
+                                    grayPix,
+                                    rgbPix,
+                                    rgbaPix,
+                                    bgraPix;
+
+    ofxBlackmagicTexFormat          currentTexFormat;
+    ofTexture&                      currentTexture;
+
+    ofTexture                       yuvTex,
+                                    grayTex,
+                                    rgbTex,
+                                    rgbaTex,
+                                    bgraTex;
+
+    bool                            grayPixOld,
+                                    rgbPixOld,
+                                    rgbaPixOld,
+                                    bgraPixOld;
+
+    bool                            yuvTexOld,
+                                    grayTexOld,
+                                    rgbTexOld,
+                                    rgbaTexOld,
+                                    bgraTexOld;
+
 };
