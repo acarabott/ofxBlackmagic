@@ -82,6 +82,7 @@ protected:
     bool                            bIsFrameNew;
     bool                            bVerbose;
     bool                            bUseTexture;
+    bool                            bUsingDefaultTexMode;
     int                             deviceID;
     float                           width;
     float                           height;

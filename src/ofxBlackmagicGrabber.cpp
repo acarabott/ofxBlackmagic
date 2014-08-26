@@ -25,6 +25,7 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     height              = 0.f;
     framerate           = -1;
     bUseTexture         = true;
+    bUsingDefaultTexMode = true;
 
     currentOfPixelFormat    = OF_PIXELS_BGRA;
     currentTexFormat        = OF_BLACKMAGIC_BGRA;
@@ -118,11 +119,11 @@ BMDPixelFormat ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat
 }
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
-    ofLogNotice("ofxBlackmagicGrabber") << "Using display mode with matching"
-        << "width and height, BGRA pixel format." << endl
-        << "To use a specific video mode or pixel format use either:" << endl
-        << " - setDisplayMode(BMDDisplayMode, BMDPixelFormat)" << endl
-        << " - initGrabber(int width, int height, float framerate)";
+    if (bUsingDefaultTexMode) {
+        ofLogNotice("ofxBlackmagicGrabber") << "Using BGRA by default. If you "
+            "want YUV, more efficient grayscale, or less efficient (but more "
+            "convenient) RGB or RGBA, then call setTextureFormat beforehand";
+    }
 
     controller.selectDevice(deviceID);
     vector<string> displayModes = controller.getDisplayModeNames();
@@ -308,6 +309,7 @@ ofPixels& ofxBlackmagicGrabber::getPixelsRef() {
 
 void ofxBlackmagicGrabber::setTextureFormat(ofxBlackmagicTexFormat texFormat) {
     currentTexFormat = texFormat;
+    bUsingDefaultTexMode = false;
 
     switch (texFormat) {
         case OF_BLACKMAGIC_YUV:
