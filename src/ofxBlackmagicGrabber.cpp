@@ -118,6 +118,16 @@ BMDPixelFormat ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat
     }
 }
 
+bool ofxBlackmagicGrabber::initGrabber(int w, int h, int framerate,
+                                       ofxBlackmagicTexFormat texFormat) {
+    setTextureFormat(texFormat);
+    setDesiredFrameRate(framerate);
+    BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
+    BMDPixelFormat pixelFormat = getBmPixelFormat(texFormat);
+
+    return setDisplayMode(displayMode, pixelFormat);
+}
+
 bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     if (bUsingDefaultTexMode) {
         ofLogNotice("ofxBlackmagicGrabber") << "Using BGRA by default. If you "
@@ -133,22 +143,10 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     if (framerate == -1) {
         return controller.getDisplayMode(w, h);
     }
-    
-    BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
-    BMDPixelFormat pixelFormat = getBmPixelFormat(currentTexFormat);
-    return setDisplayMode(displayMode, pixelFormat);
+
+    return initGrabber(w, h, framerate, currentTexFormat);
 }
 
-bool ofxBlackmagicGrabber::initGrabber(int w, int h, int framerate,
-    ofxBlackmagicTexFormat texFormat)
-{
-    setTextureFormat(texFormat);
-    setDesiredFrameRate(framerate);
-    BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
-    BMDPixelFormat pixelMode = getBmPixelFormat(texFormat);
-
-    return setDisplayMode(displayMode, pixelMode);
-}
 
 void ofxBlackmagicGrabber::clearMemory() {
     yuvPix.clear();
