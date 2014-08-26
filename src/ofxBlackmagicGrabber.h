@@ -30,6 +30,7 @@ public:
 
     void                            setVerbose(bool bTalkToMe);
     void                            setDeviceID(int _deviceID);
+    int                             getDeviceID();
     void                            setDesiredFrameRate(int _framerate);
 
     void update();
