@@ -78,10 +78,8 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
 
 bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode,
                                           BMDPixelFormat pixelFormat) {
-    if (!controller.init()
-        || displayMode == bmdModeUnknown
-        || !controller.selectDevice(deviceID));
-    {
+
+    if (displayMode == bmdModeUnknown || !controller.selectDevice(deviceID)) {
         return false;
     }
 
@@ -121,6 +119,10 @@ BMDPixelFormat ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h, int _framerate,
                                        ofxBlackmagicTexFormat texFormat) {
+    if (!controller.init()) {
+        return false;
+    }
+
     setTextureFormat(texFormat);
     framerate = _framerate;
     BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
@@ -130,6 +132,10 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h, int _framerate,
 }
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
+    if (!controller.init()) {
+        return false;
+    }
+
     if (bUsingDefaultTexMode) {
         ofLogNotice("ofxBlackmagicGrabber") << "Using BGRA by default. If you "
             "want YUV, more efficient grayscale, or less efficient (but more "
