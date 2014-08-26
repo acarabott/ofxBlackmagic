@@ -178,10 +178,11 @@ const vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfoList() {
 	vector<DisplayModeInfo> modeInfos;
 
 	typedef vector<IDeckLinkDisplayMode*>::size_type vec_mode_sz;
-
-	for (vec_mode_sz modeIndex = 0; modeList.size(); modeIndex++) {
+	for (vec_mode_sz modeIndex = 0; modeIndex < modeList.size(); modeIndex++) {
 		modeInfos.push_back(getDisplayModeInfo(modeIndex));
 	}
+
+    return modeInfos;
 }
 
 bool DeckLinkController::isFormatDetectionEnabled()  {
