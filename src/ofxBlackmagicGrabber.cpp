@@ -119,10 +119,10 @@ BMDPixelFormat ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat
     }
 }
 
-bool ofxBlackmagicGrabber::initGrabber(int w, int h, int framerate,
+bool ofxBlackmagicGrabber::initGrabber(int w, int h, int _framerate,
                                        ofxBlackmagicTexFormat texFormat) {
     setTextureFormat(texFormat);
-    setDesiredFrameRate(framerate);
+    setDesiredFrameRate(_framerate);
     BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
     BMDPixelFormat pixelFormat = getBmPixelFormat(texFormat);
 
