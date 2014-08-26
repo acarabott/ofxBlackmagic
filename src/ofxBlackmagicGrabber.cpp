@@ -1,6 +1,7 @@
 #include "ofxBlackmagicGrabber.h"
-
 #include "ColorConversion.h"
+
+#define UNSET_FRAMERATE -1
 
 ofxBlackmagicGrabber::ofxBlackmagicGrabber()
 : currentPixels(bgraPix),
@@ -23,7 +24,7 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     deviceID            = 0;
     width               = 0.f;
     height              = 0.f;
-    framerate           = -1;
+    framerate           = UNSET_FRAMERATE;
     bUseTexture         = true;
     bUsingDefaultTexMode = true;
 
@@ -140,8 +141,16 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
         << ofToString(displayModes);
 
-    if (framerate == -1) {
-        return controller.getDisplayMode(w, h);
+    if (framerate == UNSET_FRAMERATE) {
+        ofLogNotice("ofxBlackmagicGrabber") << "Framerate not set, using the "
+            "highest available for this width and height. Set explicitly with "
+            "setDesiredFramerate. ";
+        
+        // get the displayMode with highest available framerate
+        BMDDisplayMode displayMode = controller.getDisplayMode(w, h);
+        BMDPixelFormat pixelFormat = getBmPixelFormat(currentTexFormat);
+
+        return setDisplayMode(displayMode, pixelFormat);
     }
 
     return initGrabber(w, h, framerate, currentTexFormat);
