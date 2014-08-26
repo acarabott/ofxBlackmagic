@@ -135,7 +135,8 @@ const vector<string> DeckLinkController::getDisplayModeNames()  {
 	vector<string> modeNames;
 	vector<DisplayModeInfo> modeInfos = getDisplayModeInfoList();
 
-	for (int modeIndex = 0; modeIndex < modeInfos.size(); modeIndex++) {
+    typedef vector<DisplayModeInfo>::size_type vec_dm_sz;
+	for (vec_dm_sz modeIndex = 0; modeIndex < modeInfos.size(); modeIndex++) {
 		modeNames.push_back(modeInfos[modeIndex].name);
 	}
 
