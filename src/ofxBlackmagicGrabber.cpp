@@ -76,19 +76,26 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
     return devices;
 }
 
-bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode,
-                                          BMDPixelFormat pixelFormat) {
-
+bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
     if (displayMode == bmdModeUnknown || !controller.selectDevice(deviceID)) {
+        ofLogError("ofxBlackmagicGrabber::setDisplayMode") << "display mode "
+            "unknown: " << bmdModeUnknown;
         return false;
     }
 
-    if (!controller.startCaptureWithMode(displayMode, pixelFormat)) {
-        return false;
+    int displayModeIndex;
+    if (controller.getDisplayModeIndex(displayMode, displayModeIndex)) {
+        const DisplayModeInfo info = controller.getDisplayModeInfo(displayModeIndex);
+        this->width = info.width;
+        this->height = info.height;
+    } else {
+        ofLogError("ofxBlackmagicGrabber::setDisplayMode") << "display mode "
+            "not supported by this device";
     }
 
-    this->width = controller.getDisplayModeInfo(deviceID).width;
-    this->height = controller.getDisplayModeInfo(deviceID).height;
+    if (!controller.startCaptureWithMode(displayMode)) {
+        return false;
+    }
 
     return true;
 }
@@ -126,9 +133,8 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h, float _framerate,
     setTextureFormat(texFormat);
     framerate = _framerate;
     BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
-    BMDPixelFormat pixelFormat = getBmPixelFormat(texFormat);
 
-    return setDisplayMode(displayMode, pixelFormat);
+    return setDisplayMode(displayMode);
 }
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
@@ -157,9 +163,8 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
 
         // get the displayMode with highest available framerate
         BMDDisplayMode displayMode = controller.getDisplayMode(w, h);
-        BMDPixelFormat pixelFormat = getBmPixelFormat(currentTexFormat);
 
-        return setDisplayMode(displayMode, pixelFormat);
+        return setDisplayMode(displayMode);
     }
 
     return initGrabber(w, h, framerate, currentTexFormat);

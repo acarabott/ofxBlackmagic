@@ -41,10 +41,10 @@ public:
 
 	bool selectDevice(int index);
 
-	const DisplayModeInfo getDisplayModeInfo(int index);
-	const vector<DisplayModeInfo> getDisplayModeInfoList();
-	const vector<string> getDisplayModeNames();
 	bool getDisplayModeIndex(BMDDisplayMode displayMode, int& result);
+	const DisplayModeInfo& getDisplayModeInfo(int index);
+	const vector<DisplayModeInfo>& getDisplayModeInfoList();
+	const vector<string>& getDisplayModeNames();
 
 	bool isFormatDetectionEnabled();
 	bool isCapturing();

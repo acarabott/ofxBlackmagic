@@ -19,8 +19,7 @@ public:
 
     const vector<ofVideoFormat>     listDeviceFormats();
     vector<ofVideoDevice>           listDevices();
-    bool                            setDisplayMode(BMDDisplayMode,
-                                        BMDPixelFormat);
+    bool                            setDisplayMode(BMDDisplayMode);
     bool                            initGrabber(int w, int h);
     bool                            initGrabber(int w, int h, float framerate,
                                                 ofxBlackmagicTexFormat texFormat
