@@ -48,7 +48,7 @@ public:
         blackmagicGrabber->setTextureFormat(OF_BLACKMAGIC_BGRA);
         cam.setGrabber(blackmagicGrabber);
         cam.setDeviceID(0);
-        cam.setDesiredFrameRate(2997);
+        cam.setDesiredFrameRate(30);
         cam.initGrabber(1920, 1080);
 	}
 	void exit() {

@@ -117,7 +117,7 @@ BMDPixelFormat ofxBlackmagicGrabber::getBmPixelFormat(ofxBlackmagicTexFormat
     }
 }
 
-bool ofxBlackmagicGrabber::initGrabber(int w, int h, int _framerate,
+bool ofxBlackmagicGrabber::initGrabber(int w, int h, float _framerate,
                                        ofxBlackmagicTexFormat texFormat) {
     if (!controller.init()) {
         return false;

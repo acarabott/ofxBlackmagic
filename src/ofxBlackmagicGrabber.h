@@ -22,7 +22,7 @@ public:
     bool                            setDisplayMode(BMDDisplayMode,
                                         BMDPixelFormat);
     bool                            initGrabber(int w, int h);
-    bool                            initGrabber(int w, int h, int framerate,
+    bool                            initGrabber(int w, int h, float framerate,
                                                 ofxBlackmagicTexFormat texFormat
                                                     = OF_BLACKMAGIC_BGRA);
                                         // e.g. 2997 for 29.97fps
