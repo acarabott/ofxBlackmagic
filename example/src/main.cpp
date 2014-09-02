@@ -39,13 +39,13 @@ public:
 class ofApp : public ofBaseApp {
 public:
     ofVideoGrabber cam;
-    ofPtr<ofxBlackmagicGrabber> blackmagicGrabber;
 	RateTimer timer;
 
 	void setup() {
 		ofSetLogLevel(OF_LOG_VERBOSE);
         // setTextureFormat not in ofVideoGrabber API, so we call directly
-        blackmagicGrabber->setTextureFormat(OF_BLACKMAGIC_BGRA);
+        ofPtr<ofxBlackmagicGrabber> blackmagicGrabber(new ofxBlackmagicGrabber());
+        blackmagicGrabber->setTextureFormat(OF_BLACKMAGIC_GRAY);
         cam.setGrabber(blackmagicGrabber);
         cam.setDeviceID(0);
         cam.setDesiredFrameRate(30);

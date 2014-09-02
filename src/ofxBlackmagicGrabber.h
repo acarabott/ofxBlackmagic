@@ -24,9 +24,7 @@ public:
     bool                            initGrabber(int w, int h);
     bool                            initGrabber(int w, int h, float framerate,
                                                 ofxBlackmagicTexFormat texFormat
-                                                    = OF_BLACKMAGIC_BGRA);
-                                        // e.g. 2997 for 29.97fps
-                                        // 30 or 3000 for 30fps
+                                                    = OF_BLACKMAGIC_YUV);
 
     void                            setVerbose(bool bTalkToMe);
     void                            setDeviceID(int _deviceID);

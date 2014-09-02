@@ -4,8 +4,8 @@
 #define UNSET_FRAMERATE -1
 
 ofxBlackmagicGrabber::ofxBlackmagicGrabber()
-: currentPixels(bgraPix),
-  currentTexture(bgraTex) {
+: currentPixels(yuvPix),
+  currentTexture(yuvTex) {
 
     grayPixOld          = true;
     rgbPixOld           = true;
@@ -28,8 +28,8 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber()
     bUseTexture         = true;
     bUsingDefaultTexMode = true;
 
-    currentOfPixelFormat    = OF_PIXELS_BGRA;
-    currentTexFormat        = OF_BLACKMAGIC_BGRA;
+    currentOfPixelFormat    = OF_PIXELS_MONO;
+    currentTexFormat        = OF_BLACKMAGIC_YUV;
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
