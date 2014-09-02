@@ -55,14 +55,14 @@ public:
 		cam.close();
 	}
 	void update() {
+		cam.update();
         if (cam.isFrameNew()) {
-            cam.update();
             timer.tick();
         }
 
 	}
 	void draw() {
-		cam.draw(0, 0);
+		cam.draw(0, 0, 1920, 1080);
 		ofDrawBitmapStringHighlight(ofToString((int) timer.getFramerate()), 10, 20);
 	}
 	void keyPressed(int key) {
