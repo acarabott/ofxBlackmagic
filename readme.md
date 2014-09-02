@@ -1,14 +1,14 @@
 # ofxBlackMagic is an addon for [openFrameworks](http://openframeworks.cc/)
 
-updated to support 3840x2160 @ 29.97 input from the ULTRASTUDIO 4K
+This fork implements `ofxBlackmagicGrabber` as a subclass of `ofBaseVideoGrabber`, allowing it to be set as the `grabber` of an `ofVideoGrabber` instance (like `ofQuicktimeGrabber` and `ofQTKitGrabber`) making it more compatible with camera based code.
 
+This work is adapted from Kyle McDonald's `ofxBlackMagic` class, which in turn was derived from studying an older addon, [ofxBlackMagicGrabber](https://github.com/arturoc/ofxBlackmagicGrabber), and the [DeckLink SDK](http://www.blackmagicdesign.com/support/sdks) sample code.
 
-This addon is derived from studying an older addon, [ofxBlackMagicGrabber](https://github.com/arturoc/ofxBlackmagicGrabber), and the [DeckLink SDK](http://www.blackmagicdesign.com/support/sdks) sample code.
+The goal is provide an interface with Blackmagic devices that integrate seamlessly with openFrameworks projects using `ofVideoGrabber`.
 
-The goal is to provide a simple and highly optimized interface with no extraneous methods that makes it clear what a Black Magic device can offer.
+## Some advantages of this addon:
 
-Some advantages of this addon:
-
+* Compatible with projects using `ofVideoGrabber` where previously using `ofQuickTimeGrabber` or `ofQTKitGrabber`
 * All DeckLink specific functionality is placed in `DeckLinkController.h`, which can be extended if you're interested in getting minimum latency by overloading the `VideoInputFrameArrived()` callback.
 * Raw data is triple buffered to provide minimum delay to the DeckLink device and no tearing on the display side.
 * YUV to RGB conversion is only done when the user requests to use or display RGB data.
@@ -18,9 +18,14 @@ Some advantages of this addon:
 
 ## Supported System
 
-This addon has been checked with OS X 10.8 on Mac Mini, openFrameworks 0.8.0 and an UltraStudio Mini Recorder with a single 1080p30 camera.
+This addon has been checked with:
 
-This addon has been checked with a OS X 10.9 on a MacPro trashcan with openFrameworks 0.8.3 and an UltraStudio 4k Thunderbolt 2 device. 
+- OS X 10.9, MacBook Pro Retina, openFrameworks 0.8.3, Blackmagic UltraStudio Mini Recorder, GoPro Hero3 set to 1080i25
+
+The original addon has been checked with:
+
+- OS X 10.8, Mac Mini, openFrameworks 0.8.0, UltraStudio Mini Recorder, single 1080p30 camera.
+- OS X 10.9, MacPro trashcan, openFrameworks 0.8.3, UltraStudio 4k Thunderbolt 2 device. 
 
 ## Installation
 
