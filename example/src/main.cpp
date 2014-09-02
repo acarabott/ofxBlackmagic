@@ -1,5 +1,5 @@
 #include "ofMain.h"
-#include "ofxBlackMagic.h"
+#include "ofxBlackmagicGrabber.h"
 
 class RateTimer {
 protected:
@@ -38,24 +38,31 @@ public:
 
 class ofApp : public ofBaseApp {
 public:
-	
-	ofxBlackMagic cam;
+    ofVideoGrabber cam;
+    ofPtr<ofxBlackmagicGrabber> blackmagicGrabber;
 	RateTimer timer;
-	
+
 	void setup() {
 		ofSetLogLevel(OF_LOG_VERBOSE);
-		cam.setup(1920, 1080, 30);
+        // setTextureFormat not in ofVideoGrabber API, so we call directly
+        blackmagicGrabber->setTextureFormat(OF_BLACKMAGIC_BGRA);
+        cam.setGrabber(blackmagicGrabber);
+        cam.setDeviceID(0);
+        cam.setDesiredFrameRate(2997);
+        cam.initGrabber(1920, 1080);
 	}
 	void exit() {
 		cam.close();
 	}
 	void update() {
-		if(cam.update()) {
-			timer.tick();
-		}
+        if (cam.isFrameNew()) {
+            cam.update();
+            timer.tick();
+        }
+
 	}
 	void draw() {
-		cam.drawColor();
+		cam.draw(0, 0);
 		ofDrawBitmapStringHighlight(ofToString((int) timer.getFramerate()), 10, 20);
 	}
 	void keyPressed(int key) {

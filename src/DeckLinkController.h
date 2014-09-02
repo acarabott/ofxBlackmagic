@@ -11,6 +11,7 @@
 
 #include "DeckLinkAPI.h"
 #include "TripleBuffer.h"
+#include "DisplayModeInfo.h"
 
 class DeckLinkController : public IDeckLinkInputCallback {
 private:
@@ -18,26 +19,32 @@ private:
 	IDeckLink* selectedDevice;
 	IDeckLinkInput* deckLinkInput;
 	vector<IDeckLinkDisplayMode*> modeList;
-	
+
 	bool supportFormatDetection;
 	bool currentlyCapturing;
-	
-	void getAncillaryDataFromFrame(IDeckLinkVideoInputFrame* frame, BMDTimecodeFormat format, string& timecodeString, string& userBitsString);
-	
+
+	void getAncillaryDataFromFrame(IDeckLinkVideoInputFrame* frame,
+                                   BMDTimecodeFormat format,
+                                   string& timecodeString,
+                                   string& userBitsString);
+
 public:
 	TripleBuffer< vector<unsigned char> > buffer;
-	
+
 	DeckLinkController();
 	virtual ~DeckLinkController();
-	
+
 	bool init();
-	
+
 	int getDeviceCount();
 	vector<string> getDeviceNameList();
-	
+
 	bool selectDevice(int index);
-	
-	vector<string> getDisplayModeNames();
+
+	const DisplayModeInfo getDisplayModeInfo(int index);
+	const vector<DisplayModeInfo> getDisplayModeInfoList();
+	const vector<string> getDisplayModeNames();
+
 	bool isFormatDetectionEnabled();
 	bool isCapturing();
 
@@ -46,14 +53,18 @@ public:
 	bool startCaptureWithMode(BMDDisplayMode videoMode);
 	bool startCaptureWithIndex(int videoModeIndex);
 	void stopCapture();
-    
+
 	virtual HRESULT QueryInterface (REFIID iid, LPVOID *ppv) {return E_NOINTERFACE;}
 	virtual ULONG AddRef () {return 1;}
 	virtual ULONG Release () {return 1;}
-    
-	virtual HRESULT VideoInputFormatChanged (/* in */ BMDVideoInputFormatChangedEvents notificationEvents, /* in */ IDeckLinkDisplayMode *newDisplayMode, /* in */ BMDDetectedVideoInputFormatFlags detectedSignalFlags);
-	virtual HRESULT VideoInputFrameArrived (/* in */ IDeckLinkVideoInputFrame* videoFrame, /* in */ IDeckLinkAudioInputPacket* audioPacket);
-    
+
+	virtual HRESULT VideoInputFormatChanged(/* in */ BMDVideoInputFormatChangedEvents notificationEvents,
+											/* in */ IDeckLinkDisplayMode *newDisplayMode,
+											/* in */ BMDDetectedVideoInputFormatFlags detectedSignalFlags);
+
+	virtual HRESULT VideoInputFrameArrived(/* in */ IDeckLinkVideoInputFrame* videoFrame,
+										   /* in */ IDeckLinkAudioInputPacket* audioPacket);
+
 	BMDDisplayMode getDisplayMode(int w, int h);
 	BMDDisplayMode getDisplayMode(int w, int h, float framerate);
 };
