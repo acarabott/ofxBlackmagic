@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B06AF481628430095F582FA /* ofxBlackMagic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A31CEBBE14AACAFCBCC7AF43 /* ofxBlackMagic.cpp */; };
+		0E5D18B619B60615001F3F1E /* ofxBlackmagicGrabber.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E5D18B419B60615001F3F1E /* ofxBlackmagicGrabber.cpp */; };
 		2413480B948EEA290CED44D2 /* DeckLinkAPIDispatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8ED5A2818442703AFB2BF1BF /* DeckLinkAPIDispatch.cpp */; };
 		273629941820E91D00CB625E /* ColorConversion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 273629921820E91D00CB625E /* ColorConversion.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
@@ -64,6 +64,9 @@
 
 /* Begin PBXFileReference section */
 		0D8BFA5DE62827ECDD19E4AE /* DeckLinkAPIModes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DeckLinkAPIModes.h; path = ../../../addons/ofxBlackMagic/libs/DeckLink/include/DeckLinkAPIModes.h; sourceTree = SOURCE_ROOT; };
+		0E5D18B319B60615001F3F1E /* DisplayModeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayModeInfo.h; path = ../src/DisplayModeInfo.h; sourceTree = "<group>"; };
+		0E5D18B419B60615001F3F1E /* ofxBlackmagicGrabber.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxBlackmagicGrabber.cpp; path = ../src/ofxBlackmagicGrabber.cpp; sourceTree = "<group>"; };
+		0E5D18B519B60615001F3F1E /* ofxBlackmagicGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxBlackmagicGrabber.h; path = ../src/ofxBlackmagicGrabber.h; sourceTree = "<group>"; };
 		1716A5684BC3EB831AC8B6BA /* DeckLinkController.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = DeckLinkController.cpp; path = ../../../addons/ofxBlackMagic/src/DeckLinkController.cpp; sourceTree = SOURCE_ROOT; };
 		176CD3A38DBE49DB555F6961 /* DeckLinkController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DeckLinkController.h; path = ../../../addons/ofxBlackMagic/src/DeckLinkController.h; sourceTree = SOURCE_ROOT; };
 		22DBCF6B53F1127EAD052CA5 /* TripleBuffer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = TripleBuffer.h; path = ../../../addons/ofxBlackMagic/src/TripleBuffer.h; sourceTree = SOURCE_ROOT; };
@@ -74,10 +77,8 @@
 		7AD7A4B47F7D8D057CA8F12B /* DeckLinkAPIStreaming.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DeckLinkAPIStreaming.h; path = ../../../addons/ofxBlackMagic/libs/DeckLink/include/DeckLinkAPIStreaming.h; sourceTree = SOURCE_ROOT; };
 		854BFD6149F23B522563E6D7 /* DeckLinkAPIConfiguration.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DeckLinkAPIConfiguration.h; path = ../../../addons/ofxBlackMagic/libs/DeckLink/include/DeckLinkAPIConfiguration.h; sourceTree = SOURCE_ROOT; };
 		8ED5A2818442703AFB2BF1BF /* DeckLinkAPIDispatch.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = DeckLinkAPIDispatch.cpp; path = ../../../addons/ofxBlackMagic/libs/DeckLink/src/DeckLinkAPIDispatch.cpp; sourceTree = SOURCE_ROOT; };
-		A31CEBBE14AACAFCBCC7AF43 /* ofxBlackMagic.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxBlackMagic.cpp; path = ../../../addons/ofxBlackMagic/src/ofxBlackMagic.cpp; sourceTree = SOURCE_ROOT; };
 		B3CF969678E04C8B40E49CF1 /* DeckLinkAPIDiscovery.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DeckLinkAPIDiscovery.h; path = ../../../addons/ofxBlackMagic/libs/DeckLink/include/DeckLinkAPIDiscovery.h; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
-		D77827E6000D31BFF956DD1D /* ofxBlackMagic.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBlackMagic.h; path = ../../../addons/ofxBlackMagic/src/ofxBlackMagic.h; sourceTree = SOURCE_ROOT; };
 		DF39FFA388932711978C0745 /* DeckLinkAPITypes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = DeckLinkAPITypes.h; path = ../../../addons/ofxBlackMagic/libs/DeckLink/include/DeckLinkAPITypes.h; sourceTree = SOURCE_ROOT; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -161,9 +162,10 @@
 			children = (
 				1716A5684BC3EB831AC8B6BA /* DeckLinkController.cpp */,
 				176CD3A38DBE49DB555F6961 /* DeckLinkController.h */,
-				A31CEBBE14AACAFCBCC7AF43 /* ofxBlackMagic.cpp */,
-				D77827E6000D31BFF956DD1D /* ofxBlackMagic.h */,
 				22DBCF6B53F1127EAD052CA5 /* TripleBuffer.h */,
+				0E5D18B319B60615001F3F1E /* DisplayModeInfo.h */,
+				0E5D18B419B60615001F3F1E /* ofxBlackmagicGrabber.cpp */,
+				0E5D18B519B60615001F3F1E /* ofxBlackmagicGrabber.h */,
 				273629921820E91D00CB625E /* ColorConversion.cpp */,
 				273629931820E91D00CB625E /* ColorConversion.h */,
 			);
@@ -368,8 +370,8 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				FF2A09A9D39D58C1556A39E0 /* DeckLinkController.cpp in Sources */,
+				0E5D18B619B60615001F3F1E /* ofxBlackmagicGrabber.cpp in Sources */,
 				273629941820E91D00CB625E /* ColorConversion.cpp in Sources */,
-				0B06AF481628430095F582FA /* ofxBlackMagic.cpp in Sources */,
 				2413480B948EEA290CED44D2 /* DeckLinkAPIDispatch.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
