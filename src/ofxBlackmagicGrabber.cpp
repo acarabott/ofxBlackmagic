@@ -142,19 +142,19 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
             "convenient) RGB or RGBA, then call setTextureFormat beforehand";
     }
 
-    vector<string> displayModes = controller.getDisplayModeNames();
-    ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
-        << ofToString(displayModes);
-
     if (!controller.selectDevice(deviceID)) {
         return false;
     }
+
+    vector<string> displayModes = controller.getDisplayModeNames();
+    ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
+        << ofToString(displayModes);
 
     if (framerate == UNSET_FRAMERATE) {
         ofLogNotice("ofxBlackmagicGrabber") << "Framerate not set, using the "
             "highest available for this width and height. Set explicitly with "
             "setDesiredFramerate. ";
-        
+
         // get the displayMode with highest available framerate
         BMDDisplayMode displayMode = controller.getDisplayMode(w, h);
         BMDPixelFormat pixelFormat = getBmPixelFormat(currentTexFormat);
