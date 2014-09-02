@@ -397,7 +397,7 @@ ofTexture& ofxBlackmagicGrabber::getBgraTexture() {
 }
 
 ofTexture& ofxBlackmagicGrabber::getCurrentTexture() {
-    return getCurrentTexture();
+    return currentTexture;
 }
 
 ofTexture* ofxBlackmagicGrabber::getTexture() {
