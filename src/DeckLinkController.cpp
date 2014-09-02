@@ -131,16 +131,18 @@ bail:
 	return result;
 }
 
-const vector<string> DeckLinkController::getDisplayModeNames()  {
-	vector<string> modeNames;
-	vector<DisplayModeInfo> modeInfos = getDisplayModeInfoList();
+bool DeckLinkController::getDisplayModeIndex(BMDDisplayMode displayMode, int& result) {
+	int i = 0;
+	bool found = false;
 
-    typedef vector<DisplayModeInfo>::size_type vec_dm_sz;
-	for (vec_dm_sz modeIndex = 0; modeIndex < modeInfos.size(); modeIndex++) {
-		modeNames.push_back(modeInfos[modeIndex].name);
+	while (i < modeList.size() && !found) {
+	    if (modeList[i]->GetDisplayMode() == displayMode) {
+	        result = i;
+	        found = true;
+	    }
 	}
 
-	return modeNames;
+	return found;
 }
 
 const DisplayModeInfo DeckLinkController::getDisplayModeInfo(int modeIndex) {
@@ -183,6 +185,18 @@ const vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfoList() {
 	}
 
     return modeInfos;
+}
+
+const vector<string>& DeckLinkController::getDisplayModeNames()  {
+	vector<string> modeNames;
+	vector<DisplayModeInfo> modeInfos = getDisplayModeInfoList();
+
+    typedef vector<DisplayModeInfo>::size_type vec_dm_sz;
+	for (vec_dm_sz modeIndex = 0; modeIndex < modeInfos.size(); modeIndex++) {
+		modeNames.push_back(modeInfos[modeIndex].name);
+	}
+
+	return modeNames;
 }
 
 bool DeckLinkController::isFormatDetectionEnabled()  {
