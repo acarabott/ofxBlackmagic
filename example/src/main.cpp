@@ -43,9 +43,9 @@ public:
 
 	void setup() {
 		ofSetLogLevel(OF_LOG_VERBOSE);
-        // setTextureFormat not in ofVideoGrabber API, so we call directly
         ofPtr<ofxBlackmagicGrabber> blackmagicGrabber(new ofxBlackmagicGrabber());
-        blackmagicGrabber->setTextureFormat(OF_BLACKMAGIC_GRAY);
+        // setTextureFormat not in ofVideoGrabber API, so we call directly
+        blackmagicGrabber->setTextureFormat(OF_BM_TEX_FORMAT_RGB);
         cam.setGrabber(blackmagicGrabber);
         cam.setDeviceID(0);
         cam.setDesiredFrameRate(30);
