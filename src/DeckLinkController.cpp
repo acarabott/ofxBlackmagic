@@ -401,150 +401,212 @@ void DeckLinkController::getAncillaryDataFromFrame(IDeckLinkVideoInputFrame* vid
 
 }
 
+// returns the *index* of the closest matching framerate from an array of rates
+// returning the closest match (as a float) doesn't allow trustworthy comparison
+int DeckLinkController::getMatchingFramerateIndex(float input, float* rates, int n) {
+    bool found = false;
+    float bestDiff = 0.f;
+    int bestRate = 0;
+
+    int i = 0;
+    while (!found && i < n) {
+        // this accounts for inputs that may have suffered from integer truncation
+        // e.g. 23.98 becoming 23
+        if (input == floor(rates[i])) {
+            bestRate = i;
+            found = true;
+        } else {
+            float value = rates[i];
+            float diff = abs(value - input);
+
+            if (i == 0 || diff < bestDiff) {
+                bestDiff = diff;
+                bestRate = i;
+            }
+        }
+        ++i;
+    }
+
+    ofLog() << "bestRate: " << rates[bestRate];
+    return bestRate;
+}
+
 // picks the mode with matching resolution, with highest available framerate
 // and a preference for progressive over interlaced
 BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h) {
 
-	if (w == 720 && h == 486) {				// NTSC
-		return bmdModeNTSCp;
-	} else if (w == 720 && h == 576) {		// PAL
-		return bmdModePALp;
-	} else if (w == 1280 && h == 720) {		// HD 720
-		return bmdModeHD720p60;
-	} else if (w == 1920 && h == 1080) {	// HD 1080
-		return bmdModeHD1080p6000;
-	} else if (w == 2048 && h == 1556) {	// 2k
-		return bmdMode2k25;
-	} else if (w == 2048 && h == 1080) {	// 2k DCI
-		return bmdMode2kDCI25;
-	} else if (w == 3840 && h == 2160) {	// 4K
-		return bmdMode4K2160p30;
-	} else if (w == 4096 && h == 2160) {	// 4k DCI
-		return bmdMode4kDCI25;
-	}
-
-	return bmdModeUnknown;
+    if (w == 720 && h == 486) {				// NTSC
+        return bmdModeNTSCp;
+    } else if (w == 720 && h == 576) {		// PAL
+        return bmdModePALp;
+    } else if (w == 1280 && h == 720) {		// HD 720
+        return bmdModeHD720p60;
+    } else if (w == 1920 && h == 1080) {	// HD 1080
+        return bmdModeHD1080p6000;
+    } else if (w == 2048 && h == 1556) {	// 2k
+        return bmdMode2k25;
+    } else if (w == 2048 && h == 1080) {	// 2k DCI
+        return bmdMode2kDCI25;
+    } else if (w == 3840 && h == 2160) {	// 4K
+        return bmdMode4K2160p30;
+    } else if (w == 4096 && h == 2160) {	// 4k DCI
+        return bmdMode4kDCI25;
+    }
+    
+    return bmdModeUnknown;
 }
 
 BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h, float framerate) {
-	string err = "invalid framerate, for this resolution you can use:";
-
 	if (w == 720 && h == 486) {									// NTSC
-		if (framerate == 29.97) {
-		    return bmdModeNTSC;
-		} else if (framerate == 23.98) {
-            return bmdModeNTSC2398;
-		} else if (framerate == 59.94) {
-		    return bmdModeNTSCp;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "23.98, 29.97, 59.94";
-			return bmdModeUnknown;
-		}
+        float r[3] = { 23.98, 29.97, 59.94 };
+        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+            case 0:
+                return bmdModeNTSC2398;
+                break;
+            case 1:
+                return bmdModeNTSC;
+                break;
+            case 2:
+                return bmdModeNTSCp;
+                break;
+            default:
+                break;
+        }
 	} else if (w == 720 && h == 576) {							// PAL
-		if (framerate == 25) {
-		    return bmdModePAL;
-		} else if (framerate == 50) {
-		    return bmdModePALp;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "25, 50";
-			return bmdModeUnknown;
-		}
+        float r[2] = { 25, 50 };
+        switch (getMatchingFramerateIndex(framerate, r, 2)) {
+            case 0:
+                return bmdModePAL;
+                break;
+            case 1:
+                return bmdModePALp;
+                break;
+            default:
+                break;
+        }
 	} else if (w == 1280 && h == 720) {							// HD 720
-        if (framerate == 50) {
-            return bmdModeHD720p50;
-		} else if (framerate == 59.94) {
-		    return bmdModeHD720p5994;
-		} else if (framerate == 60) {
-			return bmdModeHD720p60;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "50, 59.94, 60";
-			return bmdModeUnknown;
-		}
+        float r[3] = { 50, 59.94, 60 };
+        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+            case 0:
+                return bmdModeHD720p50;
+                break;
+            case 1:
+                return bmdModeHD720p5994;
+                break;
+            case 2:
+                return bmdModeHD720p60;
+                break;
+            default:
+                break;
+        }
 	} else if (w == 1920 && h == 1080) {						// HD 1080
-		if (framerate == 23.98) {
-			return bmdModeHD1080p2398;
-		} else if (framerate == 24) {
-			return bmdModeHD1080p24;
-		} else if (framerate == 25) {
-			return bmdModeHD1080p25;
-		} else if (framerate == 29.97) {
-			return bmdModeHD1080p2997;
-		} else if (framerate == 30) {
-			return bmdModeHD1080p30;
-		} else if (framerate == 50) {
-			return bmdModeHD1080i50;
-		} else if (framerate == 59.94) {
-			return bmdModeHD1080i5994;
-		} else if (framerate == 60) {
-			return bmdModeHD1080i6000;
-		} else if (framerate == 50) {
-			return bmdModeHD1080p50;
-		} else if (framerate == 59.94) {
-			return bmdModeHD1080p5994;
-		} else if (framerate == 60) {
-			return bmdModeHD1080p6000;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "23.94, 24, 25, 29.97, 30" << endl
-				<< "50, 59.94, 60, 50, 59.94, 60";
-			return bmdModeUnknown;
-		}
+        float r[11] = { 23.98, 24, 25, 29.97, 30, 50, 59.94, 60, 50, 59.94, 60 };
+        switch (getMatchingFramerateIndex(framerate, r, 11)) {
+            case 0:
+                return bmdModeHD1080p2398;
+                break;
+            case 1:
+                return bmdModeHD1080p24;
+                break;
+            case 2:
+                return bmdModeHD1080p25;
+                break;
+            case 3:
+                return bmdModeHD1080p2997;
+                break;
+            case 4:
+                return bmdModeHD1080p30;
+                break;
+            case 5:
+                return bmdModeHD1080i50;
+                break;
+            case 6:
+                return bmdModeHD1080i5994;
+                break;
+            case 7:
+                return bmdModeHD1080i6000;
+                break;
+            case 8:
+                return bmdModeHD1080p50;
+                break;
+            case 9:
+                return bmdModeHD1080p5994;
+                break;
+            case 10:
+                return bmdModeHD1080p6000;
+                break;
+            default:
+                break;
+        }
 	} else if (w == 2048 && h == 1556) {						// 2k
-		if (framerate == 23.98) {
-			return bmdMode2k2398;
-		} else if (framerate == 24) {
-			return bmdMode2k24;
-		} else if (framerate == 25) {
-			return bmdMode2k25;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "23.94, 24, 25";
-			return bmdModeUnknown;
-		}
+        float r[3] = { 23.98, 24, 25 };
+        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+            case 0:
+                return bmdMode2k2398;
+                break;
+            case 1:
+                return bmdMode2k24;
+                break;
+            case 2:
+                return bmdMode2k25;
+                break;
+            default:
+                break;
+        }
 	} else if (w == 2048 && h == 1080) {						// 2k DCI
-		if (framerate == 23.98) {
-			return bmdMode2kDCI2398;
-		} else if (framerate == 24) {
-			return bmdMode2kDCI24;
-		} else if (framerate == 25) {
-			return bmdMode2kDCI25;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "23.98 24, 25";
-			return bmdModeUnknown;
-		}
-	} else if (w == 3840 && h == 2160) {						// 4K
-		if (framerate == 23.98) {
-			return bmdMode4K2160p2398;
-		} else if (framerate == 24) {
-			return bmdMode4K2160p24;
-		} else if (framerate == 25) {
-			return bmdMode4K2160p25;
-		} else if (framerate == 29.97) {
-			return bmdMode4K2160p2997;
-		} else if (framerate == 30) {
-			return bmdMode4K2160p30;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "23.98, 24, 25, 29.97, 30";
-			return bmdModeUnknown;
-		}
+        float r[3] = { 23.98, 24, 25 };
+        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+            case 0:
+                return bmdMode2kDCI2398;
+                break;
+            case 1:
+                return bmdMode2kDCI24;
+                break;
+            case 2:
+                return bmdMode2kDCI25;
+                break;
+            default:
+                break;
+        }
+    } else if (w == 3840 && h == 2160) {                        // 4K
+        float r[5] = { 23.98, 24, 25, 29.97, 30 };
+        switch (getMatchingFramerateIndex(framerate, r, 5)) {
+            case 0:
+                return bmdMode4K2160p2398;
+                break;
+            case 1:
+                return bmdMode4K2160p24;
+                break;
+            case 2:
+                return bmdMode4K2160p25;
+                break;
+            case 3:
+                return bmdMode4K2160p2997;
+                break;
+            case 4:
+                return bmdMode4K2160p30;
+                break;
+            default:
+            break;
+        }
 	} else if (w == 4096 && h == 2160) {						// 4k DCI
-		if (framerate == 23.98) {
-		    return bmdMode4kDCI2398;
-		} else if (framerate == 24) {
-		    return bmdMode4kDCI24;
-		} else if (framerate == 25) {
-		    return bmdMode4kDCI25;
-		} else {
-			ofLogError("DeckLinkController") << err << endl
-				<< "23.98, 24, 25";
-			return bmdModeUnknown;
-		}
+        float r[3] = { 23.98, 24, 25 };
+        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+            case 0:
+                return bmdMode4kDCI2398;
+                break;
+            case 1:
+                return bmdMode4kDCI24;
+                break;
+            case 2:
+                return bmdMode4kDCI25;
+                break;
+            default:
+                break;
+        }
 	}
+
+    ofLogError("DeckLinkController") << "resolution not supported";
 
 	return bmdModeUnknown;
 }

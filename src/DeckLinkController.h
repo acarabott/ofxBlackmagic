@@ -66,6 +66,7 @@ public:
 	virtual HRESULT VideoInputFrameArrived(/* in */ IDeckLinkVideoInputFrame* videoFrame,
 										   /* in */ IDeckLinkAudioInputPacket* audioPacket);
 
+    int getMatchingFramerateIndex(float input, float* rates, int n);
 	BMDDisplayMode getDisplayMode(int w, int h);
 	BMDDisplayMode getDisplayMode(int w, int h, float framerate);
 };
