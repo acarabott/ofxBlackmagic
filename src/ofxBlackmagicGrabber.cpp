@@ -218,7 +218,6 @@ vector<unsigned char>& ofxBlackmagicGrabber::getRaw() {
 
 ofPixels& ofxBlackmagicGrabber::getGrayPixels() {
     if(grayPixOld) {
-        // TODO if/else on current pixel mode
         grayPix.allocate(width, height, OF_IMAGE_GRAYSCALE);
         unsigned int n = width * height;
         cby0cry1_to_y(&(getRaw()[0]), grayPix.getPixels(), n);
