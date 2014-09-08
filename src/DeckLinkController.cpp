@@ -145,7 +145,7 @@ bool DeckLinkController::getDisplayModeIndex(BMDDisplayMode displayMode, int& re
 	return found;
 }
 
-const DisplayModeInfo& DeckLinkController::getDisplayModeInfo(int modeIndex) {
+const DisplayModeInfo DeckLinkController::getDisplayModeInfo(int modeIndex) {
 	DisplayModeInfo info;
 
 	// name
@@ -176,7 +176,7 @@ const DisplayModeInfo& DeckLinkController::getDisplayModeInfo(int modeIndex) {
 	return info;
 }
 
-const vector<DisplayModeInfo>& DeckLinkController::getDisplayModeInfoList() {
+const vector<DisplayModeInfo> DeckLinkController::getDisplayModeInfoList() {
 	vector<DisplayModeInfo> modeInfos;
 
 	typedef vector<IDeckLinkDisplayMode*>::size_type vec_mode_sz;
@@ -187,7 +187,7 @@ const vector<DisplayModeInfo>& DeckLinkController::getDisplayModeInfoList() {
     return modeInfos;
 }
 
-const vector<string>& DeckLinkController::getDisplayModeNames()  {
+const vector<string> DeckLinkController::getDisplayModeNames()  {
 	vector<string> modeNames;
 	vector<DisplayModeInfo> modeInfos = getDisplayModeInfoList();
 
