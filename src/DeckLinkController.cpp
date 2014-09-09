@@ -427,7 +427,6 @@ int DeckLinkController::getMatchingFramerateIndex(float input, float* rates, int
         ++i;
     }
 
-    ofLog() << "bestRate: " << rates[bestRate];
     return bestRate;
 }
 
