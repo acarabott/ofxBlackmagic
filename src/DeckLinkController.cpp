@@ -140,6 +140,7 @@ bool DeckLinkController::getDisplayModeIndex(BMDDisplayMode displayMode, int& re
 	        result = i;
 	        found = true;
 	    }
+        ++i;
 	}
 
 	return found;
