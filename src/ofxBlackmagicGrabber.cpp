@@ -188,7 +188,7 @@ int ofxBlackmagicGrabber::getDeviceID() {
     return deviceID;
 }
 
-void ofxBlackmagicGrabber::setDesiredFrameRate(int _framerate) {
+void ofxBlackmagicGrabber::setDesiredFrameRate(float _framerate) {
     ofLogVerbose("ofxBlackmagicGrabber") << "setDesiredFrameRate(): "
         "to change framerate initGrabber needs to be called now";
 

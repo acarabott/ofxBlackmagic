@@ -415,25 +415,17 @@ void DeckLinkController::getAncillaryDataFromFrame(IDeckLinkVideoInputFrame* vid
 // returns the *index* of the closest matching framerate from an array of rates
 // returning the closest match (as a float) doesn't allow trustworthy comparison
 int DeckLinkController::getMatchingFramerateIndex(float input, float* rates, int n) {
-    bool found = false;
     float bestDiff = 0.f;
     int bestRate = 0;
 
     int i = 0;
-    while (!found && i < n) {
-        // this accounts for inputs that may have suffered from integer truncation
-        // e.g. 23.98 becoming 23
-        if (input == floor(rates[i])) {
-            bestRate = i;
-            found = true;
-        } else {
-            float value = rates[i];
-            float diff = abs(value - input);
+    while (i < n) {
+        float value = rates[i];
+        float diff = abs(value - input);
 
-            if (i == 0 || diff < bestDiff) {
-                bestDiff = diff;
-                bestRate = i;
-            }
+        if (i == 0 || diff < bestDiff) {
+            bestDiff = diff;
+            bestRate = i;
         }
         ++i;
     }
