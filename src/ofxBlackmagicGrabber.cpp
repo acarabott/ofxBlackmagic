@@ -86,14 +86,20 @@ bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
     }
 
     if (!controller.startCaptureWithMode(displayMode)) {
+        ofLogError("ofxBlackmagicGrabber::setDisplayMode") << "startCapture "
+            "failed";
         return false;
     }
+
+    ofLogVerbose("ofxBlackmagicGrabber::setDisplayMode") << "starting capture";
 
     return true;
 }
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h, float _framerate) {
     if (!controller.init()) {
+        ofLogError("ofxBlackmagicGrabber::initGrabber") << "couldn't init "
+            "blackmagic device";
         return false;
     }
 
@@ -113,7 +119,7 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     }
 
     vector<string> displayModes = controller.getDisplayModeNames();
-    ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
+    ofLogVerbose("ofxBlackmagicGrabber") << "Available display modes: " << endl
         << ofToString(displayModes);
 
     if (framerate == UNSET_FRAMERATE) {
