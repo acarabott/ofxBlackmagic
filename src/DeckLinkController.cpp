@@ -301,11 +301,21 @@ bool DeckLinkController::startCaptureWithMode(BMDDisplayMode displayMode) {
 }
 
 void DeckLinkController::stopCapture()  {
+    ofLogVerbose("DeckLinkController::stopCapture") << "stopping capture";
 	// Stop the capture
-	deckLinkInput->StopStreams();
+    if (deckLinkInput->StopStreams() != S_OK) {
+        ofLogError("DeckLinkController::stopCapture") << "couldn't stop streams";
+    }
+
+    // Flush streams
+    if (deckLinkInput->FlushStreams() != S_OK) {
+        ofLogError("DeckLinkController::stopCapture") << "couldn't flush streams";
+    }
 
 	// Delete capture callback
-	deckLinkInput->SetCallback(NULL);
+    if (deckLinkInput->SetCallback(NULL) != S_OK) {
+        ofLogError("DeckLinkController::stopCapture") << "couldn't delete callback";
+    }
 
 	currentlyCapturing = false;
 }
