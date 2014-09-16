@@ -67,6 +67,6 @@ public:
 										   /* in */ IDeckLinkAudioInputPacket* audioPacket);
 
     int getMatchingFramerateIndex(float input, float* rates, int n);
-	BMDDisplayMode getDisplayMode(int w, int h);
-	BMDDisplayMode getDisplayMode(int w, int h, float framerate);
+	BMDDisplayMode getDisplayMode(int w, int h, float* framerateResult = NULL);
+	BMDDisplayMode getDisplayMode(int w, int h, float framerate, float* framerateResult = NULL);
 };

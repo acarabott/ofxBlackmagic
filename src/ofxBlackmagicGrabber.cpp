@@ -75,9 +75,9 @@ bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
         return false;
     }
 
-    int displayModeIndex;
-    if (controller.getDisplayModeIndex(displayMode, displayModeIndex)) {
-        const DisplayModeInfo info = controller.getDisplayModeInfo(displayModeIndex);
+    int modeIndex;
+    if (controller.getDisplayModeIndex(displayMode, modeIndex)) {
+        const DisplayModeInfo info = controller.getDisplayModeInfo(modeIndex);
         this->width = info.width;
         this->height = info.height;
     } else {
@@ -97,10 +97,10 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h, float _framerate) {
         return false;
     }
 
-    framerate = _framerate;
-    BMDDisplayMode displayMode = controller.getDisplayMode(w, h, framerate);
+    BMDDisplayMode mode = controller.getDisplayMode(w, h, _framerate,
+                                                    &framerate);
 
-    return setDisplayMode(displayMode);
+    return setDisplayMode(mode);
 }
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
@@ -122,9 +122,9 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
             "setDesiredFramerate. ";
 
         // get the displayMode with highest available framerate
-        BMDDisplayMode displayMode = controller.getDisplayMode(w, h);
+        BMDDisplayMode mode = controller.getDisplayMode(w, h, &framerate);
 
-        return setDisplayMode(displayMode);
+        return setDisplayMode(mode);
     }
 
     return initGrabber(w, h, framerate);
@@ -183,8 +183,14 @@ int ofxBlackmagicGrabber::getDeviceID() {
 }
 
 void ofxBlackmagicGrabber::setDesiredFrameRate(int _framerate) {
-    ofLogVerbose("ofxBlackmagicGrabber") << "setDesiredFrameRate(): "
-        "to change framerate initGrabber needs to be called now";
+    ofBaseVideoGrabber::setDesiredFrameRate((float)_framerate);
+}
+
+void ofxBlackmagicGrabber::setDesiredFrameRate(float _framerate) {
+    if (_framerate != framerate) {
+        ofLogVerbose("ofxBlackmagicGrabber") << "setDesiredFrameRate(): "
+            "to change framerate initGrabber needs to be called now";
+    }
 
     framerate = _framerate;
 }

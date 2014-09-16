@@ -24,7 +24,8 @@ public:
     void                        setVerbose(bool bTalkToMe);
     void                        setDeviceID(int _deviceID);
     int                         getDeviceID();
-    void                        setDesiredFrameRate(int _framerate);
+    void                        setDesiredFrameRate(int _framerate); // for compatibility
+    void                        setDesiredFrameRate(float _framerate);
 
     void                        update();
     bool                        isFrameNew();
@@ -63,7 +64,7 @@ protected:
     int                         deviceID;
     float                       width;
     float                       height;
-    int                         framerate;
+    float                       framerate;
 
 private:
     DeckLinkController          controller;

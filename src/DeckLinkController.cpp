@@ -433,180 +433,240 @@ int DeckLinkController::getMatchingFramerateIndex(float input, float* rates, int
 
 // picks the mode with matching resolution, with highest available framerate
 // and a preference for progressive over interlaced
-BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h) {
-
+BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h,
+                                                  float* framerateResult)
+{
+    BMDDisplayMode result = bmdModeUnknown;
+    float framerate = -1;
     if (w == 720 && h == 486) {				// NTSC
-        return bmdModeNTSCp;
+        framerate = 59.94;
+        result = bmdModeNTSCp;
     } else if (w == 720 && h == 576) {		// PAL
-        return bmdModePALp;
+        framerate = 50.f;
+        result = bmdModePALp;
     } else if (w == 1280 && h == 720) {		// HD 720
-        return bmdModeHD720p60;
+        framerate = 59.94;
+        result = bmdModeHD720p60;
     } else if (w == 1920 && h == 1080) {	// HD 1080
-        return bmdModeHD1080p6000;
+        framerate = 60.f;
+        result = bmdModeHD1080p6000;
     } else if (w == 2048 && h == 1556) {	// 2k
-        return bmdMode2k25;
+        framerate = 25.f;
+        result = bmdMode2k25;
     } else if (w == 2048 && h == 1080) {	// 2k DCI
-        return bmdMode2kDCI25;
+        framerate = 25.f;
+        result = bmdMode2kDCI25;
     } else if (w == 3840 && h == 2160) {	// 4K
-        return bmdMode4K2160p30;
+        framerate = 30.f;
+        result = bmdMode4K2160p30;
     } else if (w == 4096 && h == 2160) {	// 4k DCI
-        return bmdMode4kDCI25;
+        framerate = 25.f;
+        result = bmdMode4kDCI25;
     }
-    
-    return bmdModeUnknown;
+
+    if (framerateResult != NULL) {
+        *framerateResult = framerate;
+    }
+
+    if (result == bmdModeUnknown) {
+        ofLogError("DeckLinkController") << "resolution not supported";
+    }
+
+    return result;
 }
 
-BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h, float framerate) {
+BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h, float framerate,
+                                                  float* framerateResult)
+{
+    BMDDisplayMode result = bmdModeUnknown;
+    float fr = framerate;
+
 	if (w == 720 && h == 486) {									// NTSC
-        float r[3] = { 23.98, 29.97, 59.94 };
-        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+        static const int n = 3;
+        float r[n] = { 23.98, 29.97, 59.94 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdModeNTSC2398;
+                result = bmdModeNTSC2398;
                 break;
             case 1:
-                return bmdModeNTSC;
+                result = bmdModeNTSC;
                 break;
             case 2:
-                return bmdModeNTSCp;
+                result = bmdModeNTSCp;
                 break;
             default:
+                result = bmdModeUnknown;
                 break;
         }
+        fr = r[i];
 	} else if (w == 720 && h == 576) {							// PAL
-        float r[2] = { 25, 50 };
-        switch (getMatchingFramerateIndex(framerate, r, 2)) {
+        static const int n = 2;
+        float r[n] = { 25, 50 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdModePAL;
+                result = bmdModePAL;
                 break;
             case 1:
-                return bmdModePALp;
+                result = bmdModePALp;
                 break;
             default:
+                result = bmdModeUnknown;
                 break;
         }
-	} else if (w == 1280 && h == 720) {							// HD 720
-        float r[3] = { 50, 59.94, 60 };
-        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+        fr = r[i];
+    } else if (w == 1280 && h == 720) {							// HD 720
+        static const int n = 3;
+        float r[n] = { 50, 59.94, 60 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdModeHD720p50;
+                result = bmdModeHD720p50;
                 break;
             case 1:
-                return bmdModeHD720p5994;
+                result = bmdModeHD720p5994;
                 break;
             case 2:
-                return bmdModeHD720p60;
+                result = bmdModeHD720p60;
                 break;
             default:
+                result = bmdModeUnknown;
                 break;
         }
-	} else if (w == 1920 && h == 1080) {						// HD 1080
-        float r[11] = { 23.98, 24, 25, 29.97, 30, 50, 59.94, 60, 50, 59.94, 60 };
-        switch (getMatchingFramerateIndex(framerate, r, 11)) {
+        fr = r[i];
+    } else if (w == 1920 && h == 1080) {						// HD 1080
+        static const int n = 11;
+        float r[n] = { 23.98, 24, 25, 29.97, 30, 50, 59.94, 60, 50, 59.94, 60 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdModeHD1080p2398;
+                result = bmdModeHD1080p2398;
                 break;
             case 1:
-                return bmdModeHD1080p24;
+                result = bmdModeHD1080p24;
                 break;
             case 2:
-                return bmdModeHD1080p25;
+                result = bmdModeHD1080p25;
                 break;
             case 3:
-                return bmdModeHD1080p2997;
+                result = bmdModeHD1080p2997;
                 break;
             case 4:
-                return bmdModeHD1080p30;
+                result = bmdModeHD1080p30;
                 break;
             case 5:
-                return bmdModeHD1080i50;
+                result = bmdModeHD1080i50;
                 break;
             case 6:
-                return bmdModeHD1080i5994;
+                result = bmdModeHD1080i5994;
                 break;
             case 7:
-                return bmdModeHD1080i6000;
+                result = bmdModeHD1080i6000;
                 break;
             case 8:
-                return bmdModeHD1080p50;
+                result = bmdModeHD1080p50;
                 break;
             case 9:
-                return bmdModeHD1080p5994;
+                result = bmdModeHD1080p5994;
                 break;
             case 10:
-                return bmdModeHD1080p6000;
+                result = bmdModeHD1080p6000;
                 break;
             default:
+                result = bmdModeUnknown;
                 break;
         }
-	} else if (w == 2048 && h == 1556) {						// 2k
-        float r[3] = { 23.98, 24, 25 };
-        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+        fr = r[i];
+    } else if (w == 2048 && h == 1556) {						// 2k
+        static const int n = 3;
+        float r[n] = { 23.98, 24, 25 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdMode2k2398;
+                result = bmdMode2k2398;
                 break;
             case 1:
-                return bmdMode2k24;
+                result = bmdMode2k24;
                 break;
             case 2:
-                return bmdMode2k25;
+                result = bmdMode2k25;
                 break;
             default:
+                result = bmdModeUnknown;
                 break;
         }
-	} else if (w == 2048 && h == 1080) {						// 2k DCI
-        float r[3] = { 23.98, 24, 25 };
-        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+        fr = r[i];
+    } else if (w == 2048 && h == 1080) {						// 2k DCI
+        static const int n = 3;
+        float r[n] = { 23.98, 24, 25 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdMode2kDCI2398;
+                result = bmdMode2kDCI2398;
                 break;
             case 1:
-                return bmdMode2kDCI24;
+                result = bmdMode2kDCI24;
                 break;
             case 2:
-                return bmdMode2kDCI25;
+                result = bmdMode2kDCI25;
                 break;
             default:
+                result = bmdModeUnknown;
                 break;
         }
+        fr = r[i];
     } else if (w == 3840 && h == 2160) {                        // 4K
-        float r[5] = { 23.98, 24, 25, 29.97, 30 };
-        switch (getMatchingFramerateIndex(framerate, r, 5)) {
+        static const int n = 5;
+        float r[n] = { 23.98, 24, 25, 29.97, 30 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdMode4K2160p2398;
+                result = bmdMode4K2160p2398;
                 break;
             case 1:
-                return bmdMode4K2160p24;
+                result = bmdMode4K2160p24;
                 break;
             case 2:
-                return bmdMode4K2160p25;
+                result = bmdMode4K2160p25;
                 break;
             case 3:
-                return bmdMode4K2160p2997;
+                result = bmdMode4K2160p2997;
                 break;
             case 4:
-                return bmdMode4K2160p30;
+                result = bmdMode4K2160p30;
                 break;
             default:
             break;
         }
 	} else if (w == 4096 && h == 2160) {						// 4k DCI
-        float r[3] = { 23.98, 24, 25 };
-        switch (getMatchingFramerateIndex(framerate, r, 3)) {
+        static const int n = 3;
+        float r[n] = { 23.98, 24, 25 };
+        int i = getMatchingFramerateIndex(framerate, r, n);
+        switch (i) {
             case 0:
-                return bmdMode4kDCI2398;
+                result = bmdMode4kDCI2398;
                 break;
             case 1:
-                return bmdMode4kDCI24;
+                result = bmdMode4kDCI24;
                 break;
             case 2:
-                return bmdMode4kDCI25;
+                result = bmdMode4kDCI25;
                 break;
             default:
+                result = bmdModeUnknown;
                 break;
         }
-	}
+        fr = r[i];
+    }
 
-    ofLogError("DeckLinkController") << "resolution not supported";
+    if (framerateResult != NULL) {
+        *framerateResult = fr;
+    }
 
-	return bmdModeUnknown;
+    if (result == bmdModeUnknown) {
+        ofLogError("DeckLinkController") << "resolution not supported";
+    }
+
+	return result;
 }
