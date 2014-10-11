@@ -478,6 +478,7 @@ BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h,
 BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h, float framerate,
                                                   float* framerateResult)
 {
+    ofLogVerbose() << w << "," << h << " @ " << framerate;
     BMDDisplayMode result = bmdModeUnknown;
     float fr = framerate;
 

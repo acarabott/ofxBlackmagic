@@ -94,21 +94,33 @@ bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h, float _framerate) {
     if (!controller.init()) {
+        ofLogError("ofxBlackmagicGrabber") << "init DeckLinkController failed";
         return false;
     }
 
     BMDDisplayMode mode = controller.getDisplayMode(w, h, _framerate,
                                                     &framerate);
 
+    if (ofGetLogLevel() == OF_LOG_VERBOSE) {
+        stringstream ss;
+        for (int i = sizeof(mode) - 1; i > -1; --i) {
+            ss << (unsigned char)(mode >> i * 8);
+        }
+        ofLogVerbose("ofxBlackmagicGrabber") << "Display mode: " << ss.str();
+    }
+
     return setDisplayMode(mode);
 }
 
 bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     if (!controller.init()) {
+        ofLogError("ofxBlackmagicGrabber") << "init DeckLinkController failed";
         return false;
     }
 
     if (!controller.selectDevice(deviceID)) {
+        ofLogError("ofxBlackmagicGrabber") << "Selecting device failed, "
+                                              "try another deviceID";
         return false;
     }
 
