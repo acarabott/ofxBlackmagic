@@ -45,6 +45,8 @@ const vector<ofVideoFormat> ofxBlackmagicGrabber::listDeviceFormats() {
 
         formats.push_back(format);
     }
+
+    return formats;
 }
 
 vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
