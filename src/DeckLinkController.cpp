@@ -163,11 +163,11 @@ const DisplayModeInfo DeckLinkController::getDisplayModeInfo(int modeIndex) {
 	info.height = modeList[modeIndex]->GetHeight();
 
 	// FPS
-	BMDTimeValue numerator;
-	BMDTimeScale denominator;
+	BMDTimeValue frameDuration;
+	BMDTimeScale timeScale;
 
-	if (modeList[modeIndex]->GetFrameRate(&numerator, &denominator) == S_OK) {
-		info.framerate = numerator / denominator;
+	if (modeList[modeIndex]->GetFrameRate(&frameDuration, &timeScale) == S_OK) {
+		info.framerate = (float)timeScale / (float)frameDuration;
 	} else {
 		ofLogError("DeckLinkController") << "Couldn't read frame rate from"
 		<< " it may still work but has been set to 0";
