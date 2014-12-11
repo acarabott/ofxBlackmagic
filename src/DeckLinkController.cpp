@@ -146,12 +146,55 @@ bool DeckLinkController::getDisplayModeIndex(BMDDisplayMode displayMode, int& re
 	return found;
 }
 
+
+string DeckLinkController::getDisplayModeName(BMDDisplayMode displayMode)
+{
+    switch (displayMode) {
+        case bmdModeNTSC: return "NTSC"; break;
+        case bmdModeNTSC2398: return "NTSC 23.98"; break;
+        case bmdModePAL: return "PAL"; break;
+        case bmdModeNTSCp: return "NTSCp"; break;
+        case bmdModePALp: return "PALp"; break;
+        case bmdModeHD1080p2398: return "HD1080p 23.98"; break;
+        case bmdModeHD1080p24: return "HD1080p 24"; break;
+        case bmdModeHD1080p25: return "HD1080p 25"; break;
+        case bmdModeHD1080p2997: return "HD1080p 29.97"; break;
+        case bmdModeHD1080p30: return "HD1080p 30"; break;
+        case bmdModeHD1080i50: return "HD1080i 50"; break;
+        case bmdModeHD1080i5994: return "HD1080i 59.94"; break;
+        case bmdModeHD1080i6000: return "HD1080i 60"; break;
+        case bmdModeHD1080p50: return "HD1080p 50"; break;
+        case bmdModeHD1080p5994: return "HD1080p 59.94"; break;
+        case bmdModeHD1080p6000: return "HD1080p 60"; break;
+        case bmdModeHD720p50: return "HD720p 50"; break;
+        case bmdModeHD720p5994: return "HD720p 59.94"; break;
+        case bmdModeHD720p60: return "HD720p 60"; break;
+        case bmdMode2k2398: return "2k 23.98"; break;
+        case bmdMode2k24: return "2k 24"; break;
+        case bmdMode2k25: return "2k 25"; break;
+        case bmdMode2kDCI2398: return "2kDCI 23.98"; break;
+        case bmdMode2kDCI24: return "2kDCI 24"; break;
+        case bmdMode2kDCI25: return "2kDCI 25"; break;
+        case bmdMode4K2160p2398: return "4K2160p 23.98"; break;
+        case bmdMode4K2160p24: return "4K2160p 24"; break;
+        case bmdMode4K2160p25: return "4K2160p 25"; break;
+        case bmdMode4K2160p2997: return "4K2160p 29.97"; break;
+        case bmdMode4K2160p30: return "4K2160p 30"; break;
+        case bmdMode4kDCI2398: return "4kDCI 23.98"; break;
+        case bmdMode4kDCI24: return "4kDCI 24"; break;
+        case bmdMode4kDCI25: return "4kDCI 25"; break;
+        case bmdModeUnknown: return "Unknown"; break;
+        default: break;
+    }
+}
+
 const DisplayModeInfo DeckLinkController::getDisplayModeInfo(int modeIndex) {
+    IDeckLinkDisplayMode* mode = modeList[modeIndex];
 	DisplayModeInfo info;
 
 	// name
 	CFStringRef modeName;
-	if (modeList[modeIndex]->GetName(&modeName) == S_OK) {
+	if (mode->GetName(&modeName) == S_OK) {
 		info.name = string(CFStringGetCStringPtr(modeName, kCFStringEncodingMacRoman));
 		CFRelease(modeName);
 	} else {
@@ -159,18 +202,25 @@ const DisplayModeInfo DeckLinkController::getDisplayModeInfo(int modeIndex) {
 	}
 
 	// dimensions
-	info.width = modeList[modeIndex]->GetWidth();
-	info.height = modeList[modeIndex]->GetHeight();
+	info.width = mode->GetWidth();
+	info.height = mode->GetHeight();
 
 	// FPS
 	BMDTimeValue frameDuration;
 	BMDTimeScale timeScale;
 
-	if (modeList[modeIndex]->GetFrameRate(&frameDuration, &timeScale) == S_OK) {
-		info.framerate = (float)timeScale / (float)frameDuration;
+	if (mode->GetFrameRate(&frameDuration, &timeScale) == S_OK) {
+        info.framerate = (float)timeScale / (float)frameDuration;
+
+        BMDFieldDominance fieldDominance = mode->GetFieldDominance();
+        if (fieldDominance == bmdLowerFieldFirst || 
+            fieldDominance == bmdUpperFieldFirst
+            ) {
+            info.framerate *= 2;
+        }
 	} else {
 		ofLogError("DeckLinkController") << "Couldn't read frame rate from"
-		<< " it may still work but has been set to 0";
+            << " it may still work but has been set to 0";
 		info.framerate = 0;
 	}
 
@@ -478,7 +528,6 @@ BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h,
 BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h, float framerate,
                                                   float* framerateResult)
 {
-    ofLogVerbose() << w << "," << h << " @ " << framerate;
     BMDDisplayMode result = bmdModeUnknown;
     float fr = framerate;
 
@@ -538,6 +587,7 @@ BMDDisplayMode DeckLinkController::getDisplayMode(int w, int h, float framerate,
         fr = r[i];
     } else if (w == 1920 && h == 1080) {						// HD 1080
         static const int n = 11;
+        //FIXME, this will fail for multiple values, e.g. 50, 59.94, 60...
         float r[n] = { 23.98, 24, 25, 29.97, 30, 50, 59.94, 60, 50, 59.94, 60 };
         int i = getMatchingFramerateIndex(framerate, r, n);
         switch (i) {

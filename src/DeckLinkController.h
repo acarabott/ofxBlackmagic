@@ -42,6 +42,7 @@ public:
 	bool selectDevice(int index);
 
 	bool getDisplayModeIndex(BMDDisplayMode displayMode, int& result);
+    string getDisplayModeName(BMDDisplayMode displayMode);
 	const DisplayModeInfo getDisplayModeInfo(int index);
 	const vector<DisplayModeInfo> getDisplayModeInfoList();
 	const vector<string> getDisplayModeNames();

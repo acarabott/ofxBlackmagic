@@ -16,6 +16,7 @@ public:
     virtual                     ~ofxBlackmagicGrabber();
 
     const vector<ofVideoFormat> listDeviceFormats();
+    void                        cacheDevices();
     vector<ofVideoDevice>       listDevices();
     bool                        setDisplayMode(BMDDisplayMode);
     bool                        initGrabber(int w, int h);
@@ -55,9 +56,12 @@ public:
     ofTexture&                  getCurrentTexture();
     ofTexture*                  getTexture();
 
+    string                      getDeviceName(int w, int h, float _framerate);
+
     // void videoSettings(); // not implemented
 
 protected:
+    vector<ofVideoDevice>       videoDevices;
     bool                        bIsFrameNew;
     bool                        bVerbose;
     bool                        bUseTexture;
@@ -69,6 +73,7 @@ protected:
 private:
     DeckLinkController          controller;
 
+    BMDDisplayMode              currentDisplayMode;
     ofPixelFormat               currentOfPixelFormat;
     ofBmTextureFormat           currentOfBmTexFormat;
 

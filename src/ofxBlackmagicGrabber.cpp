@@ -22,6 +22,8 @@ ofxBlackmagicGrabber::ofxBlackmagicGrabber() {
     height                  = 0.f;
     framerate               = UNSET_FRAMERATE;
     bUseTexture             = true;
+
+    cacheDevices();
 }
 
 ofxBlackmagicGrabber::~ofxBlackmagicGrabber() {
@@ -50,7 +52,22 @@ const vector<ofVideoFormat> ofxBlackmagicGrabber::listDeviceFormats() {
 }
 
 vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
-    vector<ofVideoDevice> devices;
+    if (!controller.init()) {
+        ofLogError("ofxBlackmagicGrabber") << "init DeckLinkController failed";
+        return vector<ofVideoDevice>();
+    }
+    if (videoDevices.size() == 0) {
+        cacheDevices();
+    }
+
+    return videoDevices;
+}
+
+void ofxBlackmagicGrabber::cacheDevices() {
+    if (videoDevices.size() > 0) {
+        videoDevices.clear();
+    }
+
     vector<string> deviceNames = controller.getDeviceNameList();
 
     for (int i = 0; i < controller.getDeviceCount(); ++i) {
@@ -61,13 +78,8 @@ vector<ofVideoDevice> ofxBlackmagicGrabber::listDevices() {
         device.bAvailable   = controller.selectDevice(i);
         device.formats      = listDeviceFormats();
 
-        devices.push_back(device);
-
+        videoDevices.push_back(device);
     }
-    // ensure that we return to our original deviceID
-    controller.selectDevice(deviceID);
-
-    return devices;
 }
 
 bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
@@ -91,6 +103,8 @@ bool ofxBlackmagicGrabber::setDisplayMode(BMDDisplayMode displayMode) {
         return false;
     }
 
+    currentDisplayMode = displayMode;
+
     return true;
 }
 
@@ -102,13 +116,9 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h, float _framerate) {
 
     BMDDisplayMode mode = controller.getDisplayMode(w, h, _framerate,
                                                     &framerate);
-
     if (ofGetLogLevel() == OF_LOG_VERBOSE) {
-        stringstream ss;
-        for (int i = sizeof(mode) - 1; i > -1; --i) {
-            ss << (unsigned char)(mode >> i * 8);
-        }
-        ofLogVerbose("ofxBlackmagicGrabber") << "Display mode: " << ss.str();
+        ofLogVerbose("ofxBlackmagicGrabber") << "Using display mode: "
+            << controller.getDisplayModeName(mode);
     }
 
     return setDisplayMode(mode);
@@ -127,8 +137,11 @@ bool ofxBlackmagicGrabber::initGrabber(int w, int h) {
     }
 
     vector<string> displayModes = controller.getDisplayModeNames();
-    ofLogVerbose("ofxBlackmagicGrabber") << "Availabile display modes: " << endl
-        << ofToString(displayModes);
+    ofLogVerbose("ofxBlackmagicGrabber") << "Available display modes: " << endl;
+    for (int i = 0; i < displayModes.size(); ++i) {
+        ofLogVerbose("ofxBlackmagicGrabber") << "\t"
+                                             << ofToString(displayModes[i]);
+    }
 
     if (framerate == UNSET_FRAMERATE) {
         ofLogNotice("ofxBlackmagicGrabber") << "Framerate not set, using the "
@@ -315,4 +328,10 @@ ofTexture& ofxBlackmagicGrabber::getCurrentTexture() {
 
 ofTexture* ofxBlackmagicGrabber::getTexture() {
     return &getCurrentTexture();
+}
+
+string ofxBlackmagicGrabber::getDeviceName(int w, int h, float _framerate)
+{
+    BMDDisplayMode displayMode = controller.getDisplayMode(w, h, _framerate);
+    return controller.getDisplayModeName(displayMode);
 }
